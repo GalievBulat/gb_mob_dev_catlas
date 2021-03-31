@@ -1,0 +1,3 @@
+package com.kakadurf.catlas.presentation.map_maintaining
+
+interface MapMaintainingService
