@@ -83,4 +83,16 @@
         app:layout_constraintStart_toStartOf="@+id/iv_backgr2"
         app:layout_constraintTop_toTopOf="@+id/iv_backgr2" />
 
+    <SeekBar
+        android:id="@+id/sb_year"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:thumb="@android:drawable/ic_menu_send"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_backgr"
+        app:layout_constraintEnd_toEndOf="@+id/iv_backgr"
+        app:layout_constraintStart_toStartOf="@+id/iv_backgr"
+        app:layout_constraintTop_toTopOf="@+id/iv_backgr"
+        app:layout_constraintVertical_bias="1.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
