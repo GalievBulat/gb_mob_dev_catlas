@@ -1,9 +1,9 @@
-package com.kakadurf.catlas.data.http
+package com.kakadurf.catlas.data.http.wiki
 
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface HttpRetriever {
+interface WikiHttpRetriever {
     @GET("/w/api.php")
     suspend fun getWikiPageSection(
         @Query("page") page: String,

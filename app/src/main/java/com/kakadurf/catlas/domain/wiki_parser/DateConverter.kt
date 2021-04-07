@@ -1,10 +1,10 @@
-package com.kakadurf.catlas.data.parser
+package com.kakadurf.catlas.domain.wiki_parser
 
 class DateConverter {
-    fun extractYear(rowDate: String): Int {
+    fun extractYear(rowDate: String): Int? {
         var year: Int? = null
         val words = rowDate.split(" ")
-        For@ for (i in 0..words.size) {
+        For@ for (i in words.indices) {
             if (words[i].matches("\\d+".toRegex())) {
                 year = words[i].toInt()
                 continue@For
@@ -13,9 +13,9 @@ class DateConverter {
                             endsWith("th") || endsWith("st") ||
                                     endsWith("nd") || endsWith("rd"))
                 }) {
-                year = words[i].filter { it.isDigit() }.toInt()
+                year = words[i].takeWhile { it.isDigit() }.toInt()
             } else if (words[i].matches("\\d+-\\d+".toRegex())) {
-                year = words[i].filter { it.isDigit() }.toInt()
+                year = words[i].takeWhile { it.isDigit() }.toInt()
             }
             if (year != null) {
                 when (words[i]) {
@@ -27,6 +27,8 @@ class DateConverter {
                 }
             }
         }
-        year?.let { return it } ?: throw RuntimeException("wrong data format")
+        return year
+        /*
+        year?.let { return it } ?: throw RuntimeException("wrong data format")*/
     }
 }

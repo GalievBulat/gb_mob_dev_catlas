@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Catlas</string>
     <string name="title_activity_maps">Map</string>
-    <string name="regexp_cleanup"></string>
+    <string name="wikiPage">Timeline_of_historic_inventions</string>
 </resources>

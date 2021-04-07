@@ -1,4 +1,4 @@
-package com.kakadurf.catlas.data.parser
+package com.kakadurf.catlas.domain.wiki_parser
 
 class WikipediaParser {
     fun parseTable(rowWikiTable: String, requestedHeader: String = "countries") {
@@ -26,19 +26,22 @@ class WikipediaParser {
     fun getTimelineMap(
         rowText: String,
         dateConverter: DateConverter,
-        countryExtracted: CountryExtracted,
+        countryExtractod: CountryExtractor,
         lineDelimiter: Char = '*',
         dateDelimiter: Char = ':'
     ):
-            HashMap<Int, String> {
-        val lines = rowText
-            .split(lineDelimiter)
+            Map<Int, String> {
+        val lines = rowText.split(lineDelimiter)
         val resultingMap = HashMap<Int, String>()
-        for (i in 1..lines.size) {
+        for (i in 1 until lines.size) {
             val date = dateConverter.extractYear(lines[i].substringBefore(dateDelimiter))
             val rest = lines[i].substringAfter(dateDelimiter)
-            val region = countryExtracted.extractRegion(rest)
-            resultingMap[date] = region
+            val region = countryExtractod.extractRegion(rest)
+            region?.let { reg ->
+                date?.let { date ->
+                    resultingMap[date] = reg
+                }
+            }
         }
         return resultingMap
     }

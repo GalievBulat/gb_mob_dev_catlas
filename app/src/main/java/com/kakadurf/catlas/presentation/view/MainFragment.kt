@@ -8,56 +8,93 @@ import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.SupportMapFragment
 import com.kakadurf.catlas.R
-import com.kakadurf.catlas.data.http.WikiTextFetcher
+import com.kakadurf.catlas.data.http.openstreetmap.RegionDataFetcher
+import com.kakadurf.catlas.data.http.wiki.WikiPageRepository
+import com.kakadurf.catlas.domain.wiki_parser.CountryExtractor
+import com.kakadurf.catlas.domain.wiki_parser.DateConverter
+import com.kakadurf.catlas.domain.wiki_parser.WikiTextCleanUp
+import com.kakadurf.catlas.domain.wiki_parser.WikipediaParser
 import com.kakadurf.catlas.presentation.map_maintaining.MapMaintainingServiceImpl
 import kotlinx.android.synthetic.main.fr_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.util.*
+import kotlin.collections.HashSet
+import kotlin.coroutines.CoroutineContext
 
-class MainFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+class MainFragment(override val coroutineContext: CoroutineContext = Dispatchers.Main) : Fragment(),
+    CoroutineScope {
+    private lateinit var service: MapMaintainingServiceImpl
+    private val timelineContours = TreeMap<Int, JSONObject>()
+    private val fetcher = RegionDataFetcher()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fr_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        CoroutineScope(Dispatchers.Main).launch {
-            WikiTextFetcher().getWikiTextSection("Timeline_of_historic_inventions", 3)
+        launch(Dispatchers.IO) {
+
+            val rowText = WikiPageRepository()
+                .getWikiTextSection(resources.getString(R.string.wikiPage), 3)
+
+            val text = WikiTextCleanUp().cleanupWikiText(rowText)
+            val timeLineMap = WikipediaParser()
+                .getTimelineMap(
+                    text,
+                    DateConverter(),
+                    CountryExtractor()
+                )
+            val countrySet = HashSet<String>()
+            timeLineMap.entries.forEach {
+                if (!countrySet.contains(it.value)) {
+                    timelineContours[it.key] = fetcher.getGeometries(it.value)
+                    countrySet.add(it.value)
+                } else {
+                    val l = timeLineMap.entries.find { entry ->
+                        entry.value == it.value
+                    }?.key
+                    timelineContours[it.key] = timelineContours[l]!!
+                }
+            }
+            //Log.d("hi", timelineContours.toString())
+            this.launch MainFragment@{
+                sb_year.max = timelineContours.size - 1
+                sb_year.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(
+                        seekBar: SeekBar?,
+                        progress: Int,
+                        fromUser: Boolean
+                    ) {
+                        service.clearMap()
+                        timelineContours.values.toList()[progress].let { service.addLayer(it) }
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                })
+            }
         }
         val mapFragment = childFragmentManager.findFragmentById(R.id.iv_map) as SupportMapFragment
-        activity?.let { activity ->
-            mapFragment.getMapAsync { maps ->
-                MapMaintainingServiceImpl().apply {
-                    setOnClickListener {
-                        if (it.hasProperty("name")) {
-                            val name = it.getProperty("name")
-                            tv_info.text = name
-                        }
+        mapFragment.getMapAsync { maps ->
+            service = MapMaintainingServiceImpl(maps).apply {
+                setOnClickListener {
+                    if (it.hasProperty("display_name")) {
+                        val name = it.getProperty("display_name")
+                        tv_info.text = name
                     }
-                }.provideMap(maps, activity)
+                }
             }
         }
-        /*val timeLineMap = WikipediaParser()
-                .getTimelineMap(WikiTextCleanUp().cleanupWikiText(""),
-                        DateConverter(),
-                        CountryExtracted())*/
-        sb_year.max = 260
-        sb_year.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                //tv_info.text = timeLineMap[320-progress]
-            }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                TODO("Not yet implemented")
-            }
-
-        })
 
     }
 }

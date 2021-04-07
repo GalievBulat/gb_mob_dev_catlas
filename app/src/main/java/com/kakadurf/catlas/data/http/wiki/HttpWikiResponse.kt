@@ -1,4 +1,4 @@
-package com.kakadurf.catlas.data.http
+package com.kakadurf.catlas.data.http.wiki
 
 import com.google.gson.annotations.SerializedName
 
