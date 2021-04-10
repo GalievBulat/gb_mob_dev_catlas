@@ -3,8 +3,8 @@ package com.kakadurf.catlas.presentation.view
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kakadurf.catlas.R
+import com.kakadurf.catlas.presentation.helper.FRAGMENT_MANAGER_TAG
 
-const val FRAGMENT_MANAGER_TAG = "FMTAG"
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

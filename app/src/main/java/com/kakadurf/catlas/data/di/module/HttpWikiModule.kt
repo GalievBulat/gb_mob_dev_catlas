@@ -1,7 +1,9 @@
-package com.kakadurf.catlas.data.http.wiki
+package com.kakadurf.catlas.data.di.module
 
-import android.util.Log
+import com.kakadurf.catlas.data.http.helper.*
 import com.kakadurf.catlas.data.http.helper.HttpHelper.addQueryToInterceptor
+import com.kakadurf.catlas.data.http.helper.HttpHelper.loggingInterceptor
+import com.kakadurf.catlas.data.http.wiki.WikiHttpRetriever
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -10,46 +12,36 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 class HttpWikiModule {
-    @Singleton
     @Provides
-    @Named("logW")
-    fun getLogInt() = Interceptor {
-        Log.d("hi", it.request().url().toString())
-        it.proceed(it.request())
-    }
-
-    @Singleton
-    @Provides
-    @Named("act")
+    @Named(WIKI_ACTION_INT_TAG)
     fun getActionInterceptor() = Interceptor {
         it.addQueryToInterceptor("action", "parse")
     }
 
-    @Singleton
     @Provides
-    @Named("prop")
+    @Named(WIKI_PROPERTY_INT_TAG)
     fun getWikiTextInterceptor() = Interceptor {
         it.addQueryToInterceptor("prop", "wikitext")
     }
 
-    @Singleton
     @Provides
-    @Named("format")
+    @Named(WIKI_FORMAT_INT_TAG)
     fun getFormatInterceptor() = Interceptor {
         it.addQueryToInterceptor("format", "json")
     }
 
-    @Singleton
     @Provides
+    @Named(WIKI_CLIENT_TAG)
     fun getClient(
+        @Named(WIKI_ACTION_INT_TAG)
         actionInterceptor: Interceptor,
+        @Named(WIKI_FORMAT_INT_TAG)
         formatInterceptor: Interceptor,
-        wikiTextInterceptor: Interceptor,
-        loggingInterceptor: Interceptor
+        @Named(WIKI_PROPERTY_INT_TAG)
+        wikiTextInterceptor: Interceptor
     ) = OkHttpClient.Builder()
         .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
         .addInterceptor(actionInterceptor)
@@ -57,17 +49,16 @@ class HttpWikiModule {
         .addInterceptor(wikiTextInterceptor)
         .addInterceptor(loggingInterceptor).build()
 
-    @Singleton
     @Provides
-    fun getRetrofit(client: OkHttpClient): Retrofit = Retrofit.Builder()
+    @Named(WIKI_RETROFIT_TAG)
+    fun getRetrofit(@Named(WIKI_CLIENT_TAG) client: OkHttpClient): Retrofit = Retrofit.Builder()
         .client(client)
         .baseUrl(WIKI_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    @Singleton
     @Provides
-    fun getService(retrofit: Retrofit) = retrofit.create(
+    fun getService(@Named(WIKI_RETROFIT_TAG) retrofit: Retrofit) = retrofit.create(
         WikiHttpRetriever::class.java
     )
 }

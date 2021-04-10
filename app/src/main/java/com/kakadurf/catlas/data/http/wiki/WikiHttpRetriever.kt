@@ -9,4 +9,9 @@ interface WikiHttpRetriever {
         @Query("page") page: String,
         @Query("section") sectionNum: Int
     ): HttpWikiResponse
+
+    @GET("/w/api.php")
+    suspend fun getWholeWikiPage(
+        @Query("page") page: String
+    ): HttpWikiResponse
 }

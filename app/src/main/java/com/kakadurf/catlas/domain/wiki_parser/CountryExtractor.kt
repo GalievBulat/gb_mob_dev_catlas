@@ -1,6 +1,8 @@
 package com.kakadurf.catlas.domain.wiki_parser
 
-class CountryExtractor {
+import javax.inject.Inject
+
+class CountryExtractor @Inject constructor() {
     private val preRegionDelimiter = " in "
     fun extractRegion(rowMessage: String): String? {
         val wordSet = rowMessage.substringAfter(preRegionDelimiter, "")

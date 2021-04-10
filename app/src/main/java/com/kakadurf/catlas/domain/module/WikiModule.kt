@@ -8,8 +8,8 @@ import dagger.Provides
 @Module
 class WikiModule {
     @Provides
-    fun provideCleanup() = WikiTextCleanUp()
+    fun provideCleanup(): WikiTextCleanUp = WikiTextCleanUp()
 
     @Provides
-    fun provideParser() = WikipediaParser()
+    fun provideParser(): WikipediaParser = WikipediaParser()
 }

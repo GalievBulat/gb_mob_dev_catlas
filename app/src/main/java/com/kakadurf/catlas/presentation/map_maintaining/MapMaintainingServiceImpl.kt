@@ -12,7 +12,7 @@ import com.google.maps.android.data.Feature
 import com.google.maps.android.data.geojson.GeoJsonFeature
 import com.google.maps.android.data.geojson.GeoJsonLayer
 import com.google.maps.android.data.geojson.GeoJsonPolygonStyle
-import com.kakadurf.catlas.presentation.helpers.LoggingHelper.Companion.sout
+import com.kakadurf.catlas.presentation.helper.LoggingHelper.Companion.sout
 import org.json.JSONObject
 
  class MapMaintainingServiceImpl(private val mMap: GoogleMap) : MapMaintainingService {

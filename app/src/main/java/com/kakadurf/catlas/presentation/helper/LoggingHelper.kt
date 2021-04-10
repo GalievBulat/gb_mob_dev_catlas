@@ -1,8 +1,6 @@
-package com.kakadurf.catlas.presentation.helpers
+package com.kakadurf.catlas.presentation.helper
 
 import android.util.Log
-
-const val TAG = "hi"
 
 class LoggingHelper {
     companion object {

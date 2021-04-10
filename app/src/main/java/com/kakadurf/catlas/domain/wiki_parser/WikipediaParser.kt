@@ -1,5 +1,8 @@
 package com.kakadurf.catlas.domain.wiki_parser
 
+import com.kakadurf.catlas.data.http.wiki.HistoricEvent
+import java.util.*
+
 class WikipediaParser {
     fun parseTable(rowWikiTable: String, requestedHeader: String = "countries") {
         val table = rowWikiTable.dropWhile { it != '{' }.split("|-")
@@ -26,20 +29,19 @@ class WikipediaParser {
     fun getTimelineMap(
         rowText: String,
         dateConverter: DateConverter,
-        countryExtractod: CountryExtractor,
+        countryExtractor: CountryExtractor,
         lineDelimiter: Char = '*',
         dateDelimiter: Char = ':'
-    ):
-            Map<Int, String> {
+    ): Map<Int, HistoricEvent> {
         val lines = rowText.split(lineDelimiter)
-        val resultingMap = HashMap<Int, String>()
+        val resultingMap = TreeMap<Int, HistoricEvent>()
         for (i in 1 until lines.size) {
             val date = dateConverter.extractYear(lines[i].substringBefore(dateDelimiter))
             val rest = lines[i].substringAfter(dateDelimiter)
-            val region = countryExtractod.extractRegion(rest)
+            val region = countryExtractor.extractRegion(rest)
             region?.let { reg ->
                 date?.let { date ->
-                    resultingMap[date] = reg
+                    resultingMap[date] = HistoricEvent(reg, date, rest)
                 }
             }
         }

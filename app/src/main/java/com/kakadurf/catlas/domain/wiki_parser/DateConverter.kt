@@ -1,25 +1,28 @@
 package com.kakadurf.catlas.domain.wiki_parser
 
-class DateConverter {
+import javax.inject.Inject
+import kotlin.math.roundToInt
+
+class DateConverter @Inject constructor() {
     fun extractYear(rowDate: String): Int? {
-        var year: Int? = null
+        var year: Double? = null
         val words = rowDate.split(" ")
         For@ for (i in words.indices) {
-            if (words[i].matches("\\d+".toRegex())) {
-                year = words[i].toInt()
+            if (words[i].matches("\\d+(\\.\\d+)*".toRegex())) {
+                year = words[i].toDouble()
                 continue@For
             } else if (with(words[i]) {
                     contains("\\d+".toRegex()) && (
                             endsWith("th") || endsWith("st") ||
                                     endsWith("nd") || endsWith("rd"))
                 }) {
-                year = words[i].takeWhile { it.isDigit() }.toInt()
-            } else if (words[i].matches("\\d+-\\d+".toRegex())) {
-                year = words[i].takeWhile { it.isDigit() }.toInt()
+                year = words[i].takeWhile { it.isDigit() }.toDouble()
+            } else if (words[i].matches("(\\d+(\\.\\d+)*-)(\\d+(\\.\\d+)*)+".toRegex())) {
+                year = words[i].takeWhile { it.isDigit() }.toDouble()
             }
             if (year != null) {
                 when (words[i]) {
-                    "Mya" -> year *= -1000000
+                    "Mya", "mya" -> year *= -1000000
                     "kya", "ka" -> year *= -1000
                     "BC" -> year *= -1
                     //"AD" -> year
@@ -27,7 +30,7 @@ class DateConverter {
                 }
             }
         }
-        return year
+        return year?.roundToInt()
         /*
         year?.let { return it } ?: throw RuntimeException("wrong data format")*/
     }
