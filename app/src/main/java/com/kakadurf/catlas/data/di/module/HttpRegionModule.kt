@@ -33,6 +33,18 @@ class HttpRegionModule {
     }
 
     @Provides
+    @Named(REGION_DETAILIZATION_TAG)
+    fun detailizationInterceptor() = Interceptor {
+        it.addQueryToInterceptor("polygon_threshold", "0.1")
+    }
+
+    @Provides
+    @Named(REGION_EMAIL_TAG)
+    fun emailInterceptor() = Interceptor {
+        it.addQueryToInterceptor("email", "kakadurf@gmail.com")
+    }
+
+    @Provides
     @Named(REGION_CLIENT_TAG)
     fun client(
         @Named(REGION_FORMAT_INT_TAG)
@@ -40,12 +52,18 @@ class HttpRegionModule {
         @Named(REGION_LIMIT_INT_TAG)
         limitInterceptor: Interceptor,
         @Named(REGION_GEOJSON_INT_TAG)
-        geoJsonInterceptor: Interceptor
+        geoJsonInterceptor: Interceptor,
+        @Named(REGION_DETAILIZATION_TAG)
+        detailizationInterceptor: Interceptor,
+        @Named(REGION_EMAIL_TAG)
+        emailInterceptor: Interceptor
     ): OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
         .addInterceptor(formatInterceptor)
         .addInterceptor(limitInterceptor)
         .addInterceptor(geoJsonInterceptor)
+        .addInterceptor(detailizationInterceptor)
+        .addInterceptor(emailInterceptor)
         .addInterceptor(HttpHelper.loggingInterceptor).build()
 
     @Provides

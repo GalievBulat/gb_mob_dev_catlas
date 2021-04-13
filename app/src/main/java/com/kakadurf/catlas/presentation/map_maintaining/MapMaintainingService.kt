@@ -1,3 +1,8 @@
 package com.kakadurf.catlas.presentation.map_maintaining
 
-interface MapMaintainingService
+import org.json.JSONObject
+
+interface MapMaintainingService {
+    fun clearMap()
+    fun addLayer(json: JSONObject)
+}

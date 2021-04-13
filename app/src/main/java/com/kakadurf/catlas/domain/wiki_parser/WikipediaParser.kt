@@ -3,7 +3,12 @@ package com.kakadurf.catlas.domain.wiki_parser
 import com.kakadurf.catlas.data.http.wiki.HistoricEvent
 import java.util.*
 
-class WikipediaParser {
+class WikipediaParser(
+    private val
+    dateConverter: DateConverter,
+    private val
+    countryExtractor: CountryExtractor
+) {
     fun parseTable(rowWikiTable: String, requestedHeader: String = "countries") {
         val table = rowWikiTable.dropWhile { it != '{' }.split("|-")
         val headers = table[0].split("!!")
@@ -28,11 +33,9 @@ class WikipediaParser {
 
     fun getTimelineMap(
         rowText: String,
-        dateConverter: DateConverter,
-        countryExtractor: CountryExtractor,
         lineDelimiter: Char = '*',
         dateDelimiter: Char = ':'
-    ): Map<Int, HistoricEvent> {
+    ): TreeMap<Int, HistoricEvent> {
         val lines = rowText.split(lineDelimiter)
         val resultingMap = TreeMap<Int, HistoricEvent>()
         for (i in 1 until lines.size) {

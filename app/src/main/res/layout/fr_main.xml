@@ -74,14 +74,15 @@
     <TextView
         android:id="@+id/tv_info"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:scrollbars="vertical"
         android:text="Info"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_backgr2"
         app:layout_constraintEnd_toEndOf="@+id/iv_backgr2"
         app:layout_constraintStart_toStartOf="@+id/iv_backgr2"
-        app:layout_constraintTop_toTopOf="@+id/iv_backgr2" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_year" />
 
     <SeekBar
         android:id="@+id/sb_year"
@@ -94,5 +95,30 @@
         app:layout_constraintStart_toStartOf="@+id/iv_backgr"
         app:layout_constraintTop_toTopOf="@+id/iv_backgr"
         app:layout_constraintVertical_bias="1.0" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_year"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="year"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_backgr2"
+        app:layout_constraintEnd_toEndOf="@+id/iv_backgr2"
+        app:layout_constraintStart_toStartOf="@+id/iv_backgr2"
+        app:layout_constraintTop_toTopOf="@+id/iv_backgr2"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

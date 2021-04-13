@@ -1,22 +1,20 @@
 package com.kakadurf.catlas.presentation.view
 
 import android.app.Application
-import com.kakadurf.catlas.data.di.module.HttpRegionModule
-import com.kakadurf.catlas.data.di.module.HttpWikiModule
-import com.kakadurf.catlas.domain.module.WikiModule
-import com.kakadurf.catlas.presentation.di.component.DaggerHttpComponent
-import com.kakadurf.catlas.presentation.di.component.WikiParsingComponent
+import com.kakadurf.catlas.data.di.module.DBModule
+import com.kakadurf.catlas.presentation.di.component.DBComponent
+import com.kakadurf.catlas.presentation.di.component.DaggerAppComponent
 
 class ApplicationImpl : Application() {
     companion object {
-        lateinit var httpComponent: WikiParsingComponent
+        lateinit var dbComponent: DBComponent
     }
 
     override fun onCreate() {
-        httpComponent = DaggerHttpComponent.builder()
-            .httpRegionModule(HttpRegionModule())
-            .httpWikiModule(HttpWikiModule()).build().plusWikiParser().wikiModule(WikiModule())
+        dbComponent = DaggerAppComponent.builder().context(applicationContext)
             .build()
+            .plusDB(DBModule())
         super.onCreate()
+
     }
 }
