@@ -16,10 +16,7 @@ import com.kakadurf.catlas.presentation.helper.TimelineParser
 import com.kakadurf.catlas.presentation.map_maintaining.MapMaintainingService
 import com.kakadurf.catlas.presentation.map_maintaining.MapMaintainingServiceImpl
 import kotlinx.android.synthetic.main.fr_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
@@ -45,7 +42,6 @@ class MainFragment(
 
 
     private lateinit var service: MapMaintainingService
-
     private val regionContours = HashMap<String, JSONObject>()
     private var timeLineMap: TreeMap<Int, HistoricEvent> = TreeMap()
     private var selected: Int? = null
@@ -72,31 +68,34 @@ class MainFragment(
             val text = wikiTextCleanUp.cleanupWikiText(rowText)
             timeLineMap = wikipediaParser.getTimelineMap(text)
             timelineParser.fillContours(timeLineMap, regionContours)
-            launch(Dispatchers.Main) {
+            this@MainFragment.launch {
                 progressBar.visibility = View.GONE
                 sb_year.max = timeLineMap.size - 1
                 sb_year.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(
-                        seekBar: SeekBar?,
-                        progress: Int,
-                        fromUser: Boolean
+                            seekBar: SeekBar?,
+                            progress: Int,
+                            fromUser: Boolean
                     ) {
-                        service.clearMap()
-                        //TODO(refactor)
-                        var year: Int? = null
-                        var i = 0
-                        for (entry in timeLineMap) {
-                            if (progress == i) {
-                                year = entry.key
-                                break
+                        this@MainFragment.launch {
+                            service.clearMap()
+                            delay(600L)
+                            //TODO(refactor)
+                            var year: Int? = null
+                            var i = 0
+                            for (entry in timeLineMap) {
+                                if (progress == i) {
+                                    year = entry.key
+                                    break
+                                }
+                                i++
                             }
-                            i++
+                            //
+                            regionContours[timeLineMap[year]?.region]?.let {
+                                service.addLayer(it)
+                            }
+                            selected = year
                         }
-                        //
-                        regionContours[timeLineMap[year]?.region]?.let {
-                            service.addLayer(it)
-                        }
-                        selected = year
                     }
 
                     override fun onStartTrackingTouch(seekBar: SeekBar?) {}

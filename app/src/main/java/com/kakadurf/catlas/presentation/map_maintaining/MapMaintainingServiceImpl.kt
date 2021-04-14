@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Color
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.collections.GroundOverlayManager
 import com.google.maps.android.collections.MarkerManager
@@ -20,9 +22,6 @@ import org.json.JSONObject
 
  class MapMaintainingServiceImpl(private val mMap: GoogleMap, var context: Context) :
      MapMaintainingService {
-     fun setOnClickListener(onClickListener: (Feature) -> Unit) {
-         this.onClickListener = onClickListener
-     }
 
      private val selectedStyle = GeoJsonPolygonStyle().apply {
          fillColor = Color.parseColor(MAP_SELECTED_COLOUR)
@@ -38,14 +37,20 @@ import org.json.JSONObject
      private val polylineManager = PolylineManager(mMap)
 
      init {
-         mMap.uiSettings.isZoomControlsEnabled = true
+         with(mMap.uiSettings) {
+             isMapToolbarEnabled = false
+             isCompassEnabled = false
+             isZoomControlsEnabled = true
+             isIndoorLevelPickerEnabled = false
+             isMyLocationButtonEnabled = false
+             isRotateGesturesEnabled = false
+         }
          mMap.setMapStyle(
-             MapStyleOptions.loadRawResourceStyle(
-                 context, R.raw.map_style
-             )
+                 MapStyleOptions.loadRawResourceStyle(
+                         context, R.raw.map_style
+                 )
          )
      }
-
      override fun addLayer(json: JSONObject) {
          val layer = GeoJsonLayer(
              mMap, json,
@@ -65,12 +70,24 @@ import org.json.JSONObject
          }
          layer.addLayerToMap()
          //###
-         layer.features.firstOrNull()?.boundingBox?.center?.let {
-             mMap.moveCamera(CameraUpdateFactory.newLatLng(it))
+         layer.features.firstOrNull()?.run {
+             this.pointStyle.icon = BitmapDescriptorFactory
+                     .fromResource(R.mipmap.ic_launcher_foreground)
+             /*boundingBox?.center?.let {
+                 mMap.animateCamera(CameraUpdateFactory.newLatLng(it))
+             }*/
+             boundingBox?.let {
+                 mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(it, 0))
+             }
          }
      }
 
      override fun clearMap() {
          mMap.clear()
+         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(0.0, 0.0), 2F))
+     }
+
+     fun setOnClickListener(onClickListener: (Feature) -> Unit) {
+         this.onClickListener = onClickListener
      }
  }
