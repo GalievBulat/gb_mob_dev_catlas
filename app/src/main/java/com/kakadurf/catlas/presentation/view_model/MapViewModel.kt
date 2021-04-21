@@ -37,7 +37,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
     private lateinit var service: MapMaintainingService
     private val regionContours = HashMap<String, JSONObject>()
 
-    //TODO(replace)
+    //TODO(replace with normal coroutine dispatcherization)
     private var taskNum = 0
 
     @WorkerThread
@@ -53,7 +53,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
     @MainThread
     suspend fun onProgressChange(progress: Int) {
         val taskNum = ++taskNum
-        delay(800L)
+        delay(600L)
         if (taskNum == this.taskNum) {
             service.clearMap()
             timeline.value?.run {
