@@ -37,10 +37,13 @@ class MapViewModel @Inject constructor() : ViewModel() {
     private lateinit var service: MapMaintainingService
     private val regionContours = HashMap<String, JSONObject>()
 
+    //TODO(replace)
+    private var taskNum = 0
+
     @WorkerThread
     suspend fun parseArticle(article: String) {
         val rowText = wikiRepository
-            .getAllWikiTextFromPage(article)
+                .getAllWikiTextFromPage(article)
         val text = wikiTextCleanUp.cleanupWikiText(rowText)
         val timeLineMap = wikipediaParser.getTimelineMap(text)
         timeline.postValue(timeLineMap)
@@ -49,14 +52,17 @@ class MapViewModel @Inject constructor() : ViewModel() {
 
     @MainThread
     suspend fun onProgressChange(progress: Int) {
-        service.clearMap()
-        delay(600L)
-        timeline.value?.run {
-            keys.elementAt(progress).let {
-                regionContours[get(it)?.region]?.let { json ->
-                    service.addLayer(json)
+        val taskNum = ++taskNum
+        delay(800L)
+        if (taskNum == this.taskNum) {
+            service.clearMap()
+            timeline.value?.run {
+                keys.elementAt(progress).let {
+                    regionContours[get(it)?.region]?.let { json ->
+                        service.addLayer(json)
+                    }
+                    selectedThing.value = it
                 }
-                selectedThing.value = it
             }
         }
     }

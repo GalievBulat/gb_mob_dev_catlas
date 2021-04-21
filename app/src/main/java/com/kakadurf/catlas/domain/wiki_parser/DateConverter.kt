@@ -18,7 +18,7 @@ class DateConverter @Inject constructor() {
                 }) {
                 year = words[i].takeWhile { it.isDigit() }.toDouble()
             } else if (words[i].matches("(\\d+(\\.\\d+)*-)(\\d+(\\.\\d+)*)+".toRegex())) {
-                year = words[i].takeWhile { it.isDigit() }.toDouble()
+                year = words[i].takeWhile { it.isDigit() || it == '.' }.toDouble()
             }
             if (year != null) {
                 when (words[i]) {
