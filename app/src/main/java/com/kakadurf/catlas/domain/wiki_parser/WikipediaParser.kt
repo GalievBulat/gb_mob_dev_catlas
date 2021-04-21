@@ -33,22 +33,30 @@ class WikipediaParser(
 
     fun getTimelineMap(
         rowText: String,
-        lineDelimiter: Char = '*',
-        dateDelimiter: Char = ':'
+        lineDelimiter: String = "*",
+        articleDelimiter: String = "==",
+        dateDelimiter: String = ":"
     ): TreeMap<Int, HistoricEvent> {
         val lines = rowText.split(lineDelimiter)
         val resultingMap = TreeMap<Int, HistoricEvent>()
         for (i in 1 until lines.size) {
-            val date = dateConverter.extractYear(lines[i].substringBefore(dateDelimiter))
-            val rest = lines[i].substringAfter(dateDelimiter)
+            val line = lines[i].substringBefore(articleDelimiter)
+            val date = dateConverter.extractYear(line.substringBefore(dateDelimiter))
+            val rest = line.substringAfter(dateDelimiter)
             val region = countryExtractor.extractRegion(rest)
             region?.let { reg ->
                 date?.let { date ->
-                    resultingMap[date] = HistoricEvent(reg, date, rest)
+                    resultingMap[date] = HistoricEvent(reg, date, convertToText(rest))
                 }
             }
         }
         return resultingMap
     }
 
+    private fun convertToText(
+        wikiText: String,
+        linkStart: String = "[[",
+        linkEnd: String = "]]"
+    ) =
+        wikiText.replace(linkStart, "").replace(linkEnd, "")
 }

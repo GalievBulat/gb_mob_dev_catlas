@@ -8,6 +8,7 @@ import com.kakadurf.catlas.domain.module.WikiModule
 import dagger.BindsInstance
 import dagger.Component
 
+///!!!!!
 @Component(
     modules = [HttpWikiModule::class, HttpRegionModule::class,
         WikiModule::class]

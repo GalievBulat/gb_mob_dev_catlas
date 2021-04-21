@@ -12,9 +12,7 @@ import com.google.maps.android.collections.MarkerManager
 import com.google.maps.android.collections.PolygonManager
 import com.google.maps.android.collections.PolylineManager
 import com.google.maps.android.data.Feature
-import com.google.maps.android.data.geojson.GeoJsonFeature
 import com.google.maps.android.data.geojson.GeoJsonLayer
-import com.google.maps.android.data.geojson.GeoJsonPolygonStyle
 import com.kakadurf.catlas.R
 import com.kakadurf.catlas.data.http.helper.MAP_REGION_STROKE
 import com.kakadurf.catlas.data.http.helper.MAP_SELECTED_COLOUR
@@ -23,12 +21,12 @@ import org.json.JSONObject
  class MapMaintainingServiceImpl(private val mMap: GoogleMap, var context: Context) :
      MapMaintainingService {
 
-     private val selectedStyle = GeoJsonPolygonStyle().apply {
+     /*private val selectedStyle = GeoJsonPolygonStyle().apply {
          fillColor = Color.parseColor(MAP_SELECTED_COLOUR)
          strokeColor = Color.WHITE
          strokeWidth = MAP_REGION_STROKE
      }
-     private var currentLand: GeoJsonFeature? = null
+     private var currentLand: GeoJsonFeature? = null*/
      private var onClickListener: (Feature) -> Unit = {}
 
      private val markerManager = MarkerManager(mMap)
@@ -58,16 +56,20 @@ import org.json.JSONObject
          )
 
          val defaultStyle = layer.defaultPolygonStyle.apply {
-             strokeColor = Color.BLACK
+             fillColor = Color.parseColor(MAP_SELECTED_COLOUR)
+             strokeColor = Color.WHITE
              strokeWidth = MAP_REGION_STROKE
          }
          layer.setOnFeatureClickListener {
+             onClickListener(it)
+         }
+         /*layer.setOnFeatureClickListener {
              onClickListener(it)
              currentLand?.polygonStyle = defaultStyle
              currentLand = (it as? GeoJsonFeature)?.apply {
                  polygonStyle = selectedStyle
              }
-         }
+         }*/
          layer.addLayerToMap()
          //###
          layer.features.firstOrNull()?.run {

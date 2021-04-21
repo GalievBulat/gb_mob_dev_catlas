@@ -22,4 +22,16 @@ object HttpHelper {
                 }
         }
     }
+
+    fun Interceptor.Chain.addQueriesToInterceptor(vararg queryPairs: Pair<String, String>): Response {
+        with(this) {
+            val requestBuilder = request().url().newBuilder()
+            queryPairs.forEach {
+                requestBuilder.addQueryParameter(it.first, it.second)
+            }
+            return requestBuilder.build().let { url ->
+                this.proceed(request().newBuilder().url(url).build())
+            }
+        }
+    }
 }

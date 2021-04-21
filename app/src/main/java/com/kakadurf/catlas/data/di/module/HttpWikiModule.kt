@@ -1,8 +1,9 @@
 package com.kakadurf.catlas.data.di.module
 
-import com.kakadurf.catlas.data.http.helper.*
-import com.kakadurf.catlas.data.http.helper.HttpHelper.addQueryToInterceptor
+import com.kakadurf.catlas.data.http.helper.HttpHelper.addQueriesToInterceptor
 import com.kakadurf.catlas.data.http.helper.HttpHelper.loggingInterceptor
+import com.kakadurf.catlas.data.http.helper.TIMEOUT
+import com.kakadurf.catlas.data.http.helper.WIKI_URL
 import com.kakadurf.catlas.data.http.wiki.WikiHttpRetriever
 import dagger.Module
 import dagger.Provides
@@ -13,39 +14,31 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 
+const val WIKI_INTERCEPTOR_TAG = "wiki_property_interceptor"
+const val WIKI_CLIENT_TAG = "wiki_client"
+const val WIKI_RETROFIT_TAG = "wiki_retrofit"
+
 @Module
 class HttpWikiModule {
     @Provides
-    @Named(WIKI_ACTION_INT_TAG)
-    fun getActionInterceptor() = Interceptor {
-        it.addQueryToInterceptor("action", "parse")
-    }
-
-    @Provides
-    @Named(WIKI_PROPERTY_INT_TAG)
+    @Named(WIKI_INTERCEPTOR_TAG)
     fun getWikiTextInterceptor() = Interceptor {
-        it.addQueryToInterceptor("prop", "wikitext")
+        it.addQueriesToInterceptor(
+            Pair("prop", "wikitext"),
+            Pair("format", "json"),
+            Pair("action", "parse")
+        )
+
     }
 
-    @Provides
-    @Named(WIKI_FORMAT_INT_TAG)
-    fun getFormatInterceptor() = Interceptor {
-        it.addQueryToInterceptor("format", "json")
-    }
 
     @Provides
     @Named(WIKI_CLIENT_TAG)
     fun getClient(
-        @Named(WIKI_ACTION_INT_TAG)
-        actionInterceptor: Interceptor,
-        @Named(WIKI_FORMAT_INT_TAG)
-        formatInterceptor: Interceptor,
-        @Named(WIKI_PROPERTY_INT_TAG)
+        @Named(WIKI_INTERCEPTOR_TAG)
         wikiTextInterceptor: Interceptor
     ) = OkHttpClient.Builder()
         .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
-        .addInterceptor(actionInterceptor)
-        .addInterceptor(formatInterceptor)
         .addInterceptor(wikiTextInterceptor)
         .addInterceptor(loggingInterceptor).build()
 

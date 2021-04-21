@@ -4,46 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D9D9D9">
+    android:background="@color/background">
 
     <ImageView
         android:id="@+id/iv_backgr"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_map"
+        android:padding="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/sb_year"
         app:layout_constraintEnd_toEndOf="@+id/iv_map"
         app:layout_constraintStart_toStartOf="@+id/iv_map"
         app:layout_constraintTop_toTopOf="@+id/iv_map"
         app:srcCompat="@drawable/header" />
 
-    <ImageView
-        android:id="@+id/iv_backgr2"
-        android:layout_width="140dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_map"
-        app:layout_constraintEnd_toStartOf="@+id/iv_backgr"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iv_map"
-        app:srcCompat="@drawable/header" />
     <fragment
         android:id="@+id/iv_map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        tools:context=".presentation.view.MainActivity"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="16dp"
-        android:padding="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/sb_year"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@id/iv_backgr2"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_header"
-        app:srcCompat="@drawable/world_map_png28" />
+        app:srcCompat="@drawable/world_map_png28"
+        tools:context=".presentation.view.MainActivity" />
 
     <ImageView
         android:id="@+id/iv_header"
@@ -71,29 +57,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_info"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scrollbars="vertical"
-        android:text="Info"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_backgr2"
-        app:layout_constraintEnd_toEndOf="@+id/iv_backgr2"
-        app:layout_constraintStart_toStartOf="@+id/iv_backgr2"
-        app:layout_constraintTop_toBottomOf="@+id/tv_year" />
-
     <SeekBar
         android:id="@+id/sb_year"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:max="100"
-        android:thumb="@android:drawable/ic_menu_send"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_backgr"
+        android:thumb="@android:drawable/ic_menu_recent_history"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/iv_backgr"
         app:layout_constraintStart_toStartOf="@+id/iv_backgr"
-        app:layout_constraintTop_toTopOf="@+id/iv_backgr"
+        app:layout_constraintTop_toBottomOf="@+id/tv_header"
         app:layout_constraintVertical_bias="1.0" />
 
     <ProgressBar
@@ -104,21 +77,37 @@
         android:padding="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_year"
+        app:layout_constraintEnd_toEndOf="@+id/tv_year"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="@+id/tv_year"
+        app:layout_constraintTop_toTopOf="@+id/tv_year"
+        app:layout_constraintVertical_bias="0.76"
+        app:srcCompat="@drawable/text_background" />
 
     <TextView
         android:id="@+id/tv_year"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:paddingLeft="64dp"
+        android:paddingBottom="8dp"
         android:text="year"
         android:textColor="@color/white"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_backgr2"
-        app:layout_constraintEnd_toEndOf="@+id/iv_backgr2"
-        app:layout_constraintStart_toStartOf="@+id/iv_backgr2"
-        app:layout_constraintTop_toTopOf="@+id/iv_backgr2"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_backgr"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_backgr"
         app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

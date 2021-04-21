@@ -28,7 +28,7 @@ class CountryExtractor @Inject constructor() {
                 }
             }
         }
-        return resultingWord
+        return resultingWord?.trim()
         //throw RuntimeException("wrong country format")
     }
 }

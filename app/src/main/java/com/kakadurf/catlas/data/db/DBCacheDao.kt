@@ -8,7 +8,6 @@ import androidx.room.Query
 interface DBCacheDao {
     @Insert
     suspend fun saveToDB(entity: CachedEntity)
-
     @Query("select * from cache where region =:region")
     suspend fun pullFromDB(region: String): CachedEntity?
 }
