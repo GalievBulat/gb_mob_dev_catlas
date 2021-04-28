@@ -13,7 +13,7 @@
 
 
     <application
-        android:name="com.kakadurf.catlas.presentation.view.ApplicationImpl"
+        android:name="com.kakadurf.catlas.presentation.general.view.ApplicationImpl"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -34,7 +34,7 @@
             android:value="@string/secret_key" />
 
         <activity
-            android:name=".presentation.view.MainActivity"
+            android:name="com.kakadurf.catlas.presentation.general.view.MainActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

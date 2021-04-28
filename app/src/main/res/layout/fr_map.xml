@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_header"
         app:srcCompat="@drawable/world_map_png28"
-        tools:context=".presentation.view.MainActivity" />
+        tools:context=".presentation.general.view.MainActivity" />
 
     <ImageView
         android:id="@+id/iv_header"

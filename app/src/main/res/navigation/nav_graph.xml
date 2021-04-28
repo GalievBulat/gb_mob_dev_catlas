@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.kakadurf.catlas.presentation.view.MapFragment"
+        android:name="com.kakadurf.catlas.presentation.map.view.fragment.MapFragment"
         android:label="MainFragment">
         <action
             android:id="@+id/action_mainFragment_to_extendedInfoFragment"
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
-        android:name="com.kakadurf.catlas.presentation.view.MenuFragment"
+        android:name="com.kakadurf.catlas.presentation.general.view.MenuFragment"
         android:label="MenuFragment">
         <action
             android:id="@+id/action_menuFragment_to_mainFragment"
@@ -26,6 +26,6 @@
     </fragment>
     <fragment
         android:id="@+id/extendedInfoFragment"
-        android:name="com.kakadurf.catlas.presentation.view.ExtendedInfoFragment"
+        android:name="com.kakadurf.catlas.presentation.map.view.ExtendedInfoFragment"
         android:label="ExtendedInfoFragment" />
 </navigation>
