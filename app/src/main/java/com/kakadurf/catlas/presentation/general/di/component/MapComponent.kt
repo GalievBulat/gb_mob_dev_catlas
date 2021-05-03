@@ -4,7 +4,8 @@ import com.kakadurf.catlas.data.timeline.module.HttpRegionModule
 import com.kakadurf.catlas.data.timeline.module.HttpWikiModule
 import com.kakadurf.catlas.domain.wiki.module.WikiModule
 import com.kakadurf.catlas.presentation.general.di.annotation.MapScope
-import com.kakadurf.catlas.presentation.map.di.ViewModelModule
+import com.kakadurf.catlas.presentation.map.di.MapViewModelBindingModule
+import com.kakadurf.catlas.presentation.map.di.MapViewModelModule
 import com.kakadurf.catlas.presentation.map.view.fragment.MapFragment
 import dagger.Subcomponent
 
@@ -12,12 +13,12 @@ import dagger.Subcomponent
 @Subcomponent(
     modules = [
         HttpWikiModule::class, HttpRegionModule::class,
-        WikiModule::class, ViewModelModule::class
+        WikiModule::class, MapViewModelBindingModule::class,
+        MapViewModelModule::class
     ]
 )
 interface MapComponent {
     fun inject(fragment: MapFragment)
-
     @Subcomponent.Builder
     interface Builder {
         fun build(): MapComponent

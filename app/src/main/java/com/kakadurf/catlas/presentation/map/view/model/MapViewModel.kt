@@ -14,7 +14,7 @@ import org.json.JSONObject
 import java.util.TreeMap
 import javax.inject.Inject
 
-class MapViewModel @Inject constructor() : ViewModel() {
+class MapViewModel : ViewModel() {
     @Inject
     lateinit var wikiRepository: WikiPageRepository
 

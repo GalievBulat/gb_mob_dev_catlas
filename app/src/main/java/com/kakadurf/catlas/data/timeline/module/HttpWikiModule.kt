@@ -26,9 +26,9 @@ class HttpWikiModule {
     @Named(WIKI_INTERCEPTOR_TAG)
     fun getWikiTextInterceptor() = Interceptor {
         it.addQueriesToInterceptor(
-            Pair("prop", "wikitext"),
-            Pair("format", "json"),
-            Pair("action", "parse")
+            "prop" to "wikitext",
+            "format" to "json",
+            "action" to "parse"
         )
     }
 

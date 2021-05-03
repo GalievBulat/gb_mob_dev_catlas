@@ -87,7 +87,7 @@ class MapFragment(
                         ) {
                             viewModel.getYearIndexed(progress)?.let {
                                 curYear = it
-                                offer(Pair(it, viewModel.getRegionJsonByYear(it)))
+                                offer(it to viewModel.getRegionJsonByYear(it))
                             }
                         }
 

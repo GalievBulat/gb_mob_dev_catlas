@@ -25,11 +25,11 @@ class HttpRegionModule {
     @Named(REGION_INTERCEPTOR_TAG)
     fun formatInterceptor() = Interceptor {
         it.addQueriesToInterceptor(
-            Pair("format", "geojson"),
-            Pair("polygon_threshold", "0.1"),
-            Pair("limit", "1"),
-            Pair("email", "kakadurf@gmail.com"),
-            Pair("polygon_geojson", "1")
+            "format" to "geojson",
+            "polygon_threshold" to "0.1",
+            "limit" to "1",
+            "email" to "kakadurf@gmail.com",
+            "polygon_geojson" to "1"
         )
     }
 

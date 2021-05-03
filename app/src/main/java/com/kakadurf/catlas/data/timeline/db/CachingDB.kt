@@ -11,7 +11,6 @@ const val DB_NAME = "cahcingDb"
 abstract class CachingDB : RoomDatabase() {
     companion object {
         private lateinit var instance: CachingDB
-
         @Synchronized
         fun create(context: Context): CachingDB {
             if (!::instance.isInitialized) {
@@ -25,6 +24,5 @@ abstract class CachingDB : RoomDatabase() {
             return instance
         }
     }
-
     abstract fun getDao(): DBCacheDao
 }

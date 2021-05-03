@@ -2,12 +2,18 @@ package com.kakadurf.catlas.presentation.general.di.component
 
 import android.content.Context
 import com.kakadurf.catlas.data.timeline.module.DBModule
-import com.kakadurf.catlas.presentation.general.di.annotation.DBScope
+import com.kakadurf.catlas.presentation.general.di.annotation.AppScope
+import com.kakadurf.catlas.presentation.general.di.module.ViewModelFactoryModule
 import dagger.BindsInstance
 import dagger.Component
 
-@DBScope
-@Component(modules = [DBModule::class])
+@AppScope
+@Component(
+    modules = [
+        DBModule::class,
+        ViewModelFactoryModule::class
+    ]
+)
 interface AppComponent {
     fun plusMap(): MapComponent.Builder
     @Component.Builder
