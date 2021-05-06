@@ -10,28 +10,26 @@ import javax.inject.Inject
 
 class MapInflater @Inject constructor(
     private val fetcher: RegionFetching,
-    private val cachingService: DBCacheDao
+    private val cachingService: DBCacheDao,
+    private val localGeo: LocalGeo
 ) {
     suspend fun fillContours(
         timeLineMap: Map<Int, HistoricEvent>,
         regionContours: HashMap<String, JSONObject>
     ) {
         timeLineMap.values.forEach {
-            it.region.let { region ->
-                if (!regionContours.containsKey(region)) {
-                    regionContours[region] =
-                        (
-                                cachingService.pullFromDB(region)?.let { cache ->
-                                    Log.d("hi", "cache")
-                                    JSONObject(cache.json)
-                                } ?: JSONObject(
-                                    fetcher.getGeometries(region).also { json ->
-                                        cachingService.saveToDB(CachedEntity(0, region, json))
-                                    }
-                                )
-                                )
-                }
+            if (!regionContours.containsKey(it.region)) {
+                regionContours[it.region] =
+                    (cachingService.pullFromDB(it.region)?.let { cache ->
+                        Log.d("hi", "cache")
+                        JSONObject(cache.json)
+                    } ?: JSONObject(
+                        fetcher.getGeometries(it.region).also { json ->
+                            cachingService.saveToDB(CachedEntity(it.region, json))
+                        }
+                    ))
             }
+
         }
     }
 }

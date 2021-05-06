@@ -1,9 +1,9 @@
 package com.kakadurf.catlas.data.timeline.module
 
 import com.kakadurf.catlas.BuildConfig
-import com.kakadurf.catlas.data.timeline.http.helper.HttpHelper
-import com.kakadurf.catlas.data.timeline.http.helper.HttpHelper.addQueriesToInterceptor
 import com.kakadurf.catlas.data.timeline.http.openstreetmap.RegionHttpRetriever
+import com.kakadurf.catlas.data.timeline.http.service.addQueriesToInterceptor
+import com.kakadurf.catlas.data.timeline.http.service.loggingInterceptor
 import com.kakadurf.catlas.presentation.general.di.annotation.MapScope
 import dagger.Module
 import dagger.Provides
@@ -42,7 +42,7 @@ class HttpRegionModule {
     ): OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
         .addInterceptor(formatInterceptor)
-        .addInterceptor(HttpHelper.loggingInterceptor).build()
+        .addInterceptor(loggingInterceptor).build()
 
     @Provides
     @MapScope

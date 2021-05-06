@@ -1,8 +1,8 @@
 package com.kakadurf.catlas.data.timeline.module
 
 import com.kakadurf.catlas.BuildConfig
-import com.kakadurf.catlas.data.timeline.http.helper.HttpHelper.addQueriesToInterceptor
-import com.kakadurf.catlas.data.timeline.http.helper.HttpHelper.loggingInterceptor
+import com.kakadurf.catlas.data.timeline.http.service.addQueriesToInterceptor
+import com.kakadurf.catlas.data.timeline.http.service.loggingInterceptor
 import com.kakadurf.catlas.data.timeline.http.wiki.WikiHttpRetriever
 import com.kakadurf.catlas.presentation.general.di.annotation.MapScope
 import dagger.Module

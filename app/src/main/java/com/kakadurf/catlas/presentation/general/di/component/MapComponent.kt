@@ -7,6 +7,7 @@ import com.kakadurf.catlas.presentation.general.di.annotation.MapScope
 import com.kakadurf.catlas.presentation.map.di.MapViewModelBindingModule
 import com.kakadurf.catlas.presentation.map.di.MapViewModelModule
 import com.kakadurf.catlas.presentation.map.view.fragment.MapFragment
+import com.kakadurf.catlas.presentation.map.view.model.MapViewModel
 import dagger.Subcomponent
 
 @MapScope
@@ -19,6 +20,7 @@ import dagger.Subcomponent
 )
 interface MapComponent {
     fun inject(fragment: MapFragment)
+    fun inject(mapViewModel: MapViewModel)
     @Subcomponent.Builder
     interface Builder {
         fun build(): MapComponent

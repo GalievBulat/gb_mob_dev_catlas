@@ -9,6 +9,7 @@ import com.kakadurf.catlas.data.timeline.http.wiki.HistoricEvent
 import com.kakadurf.catlas.data.timeline.http.wiki.WikiPageRepository
 import com.kakadurf.catlas.domain.wiki.parser.WikiTextCleanUp
 import com.kakadurf.catlas.domain.wiki.parser.WikipediaParser
+import com.kakadurf.catlas.presentation.map.service.LocalGeo
 import com.kakadurf.catlas.presentation.map.service.MapInflater
 import org.json.JSONObject
 import java.util.TreeMap
@@ -27,6 +28,9 @@ class MapViewModel : ViewModel() {
     @Inject
     lateinit var mapInflater: MapInflater
 
+    @Inject
+    lateinit var localGeo: LocalGeo
+
     private val mTimeLineMap: MutableLiveData<TreeMap<Int, HistoricEvent>> = MutableLiveData()
     private val mCurrentYear: MutableLiveData<Int> = MutableLiveData()
     private val mMapConfigCompletion: MutableLiveData<Boolean> = MutableLiveData()
@@ -39,8 +43,7 @@ class MapViewModel : ViewModel() {
 
     @WorkerThread
     suspend fun parseArticle(article: String) {
-        val rowText = wikiRepository
-            .getAllWikiTextFromPage(article)
+        val rowText = wikiRepository.getAllWikiTextFromPage(article)
         val text = wikiTextCleanUp.cleanupWikiText(rowText)
         val timeLineMap = wikipediaParser.getTimelineMap(text)
         mapInflater.fillContours(timeLineMap, regionContours)
