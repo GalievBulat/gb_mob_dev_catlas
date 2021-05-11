@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="8dp"
-        android:text="Description"
+        android:text="Context"
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_header"
@@ -69,5 +69,15 @@
         app:layout_constraintBottom_toBottomOf="@+id/iv_context_text_background"
         app:layout_constraintEnd_toEndOf="@+id/iv_context_text_background"
         app:layout_constraintStart_toStartOf="@+id/iv_context_text_background"
-        app:layout_constraintTop_toTopOf="@+id/iv_context_text_background" />
+        app:layout_constraintTop_toBottomOf="@+id/vp_context" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_context"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_context_text_background"
+        app:layout_constraintEnd_toEndOf="@+id/iv_context_text_background"
+        app:layout_constraintStart_toStartOf="@+id/iv_context_text_background"
+        app:layout_constraintTop_toTopOf="@+id/iv_context_text_background"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

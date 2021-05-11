@@ -10,6 +10,4 @@ class MapViewModelModule {
     @MapScope
     @Provides
     fun getMapViewModule() = MapViewModel()
-
-
 }

@@ -22,6 +22,8 @@ import com.kakadurf.catlas.presentation.map.view.model.MapViewModel
 import kotlinx.android.synthetic.main.fr_map.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
@@ -29,10 +31,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
-
 
 class MapFragment(
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
@@ -49,17 +49,14 @@ class MapFragment(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ApplicationImpl.getMapComp()?.inject(this)
+        super.onCreate(savedInstanceState)
         this@MapFragment.activity?.let { it ->
-            //TODO(refactor)
             viewModel = ViewModelProvider(it, viewModelFactory)
                 .get(MapViewModel::class.java).also { map ->
                     ApplicationImpl.getMapComp()?.inject(map)
                 }
-            launch(Dispatchers.IO) {
-                viewModel.parseArticle("Timeline_of_historic_inventions")
-            }
+            viewModel.fetchDataForMap("Timeline_of_historic_inventions")
         }
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -77,50 +74,48 @@ class MapFragment(
     @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = ArrayAdapter<String>(
-            requireActivity(),
-            android.R.layout.simple_spinner_item, arrayOf("Historic Inventions")
-        )
-        spinner.adapter = adapter
-        //!
-        /*launch(Dispatchers.Default) {
-            activity?.run {
-                LocalGeo(
-                ).getFeature("Western Roman Empire")
+        activity?.let {
+            val adapter = ArrayAdapter(
+                it,
+                android.R.layout.simple_spinner_item, arrayOf("Historic Inventions")
+            )
+            spinner.adapter = adapter
+            mapFragment = childFragmentManager.findFragmentById(R.id.iv_map) as? SupportMapFragment
+            configureMap()
+            viewModel.timeLineMap.observe(viewLifecycleOwner) { map ->
+                // fix recreate issue
+                onConfigDone(map)
             }
-        }*/
-        mapFragment = childFragmentManager.findFragmentById(R.id.iv_map) as? SupportMapFragment
-        configureMap()
-        viewModel.timeLineMap.observe(viewLifecycleOwner) { map ->
-            // fix recreate issue
-            onConfigDone(map)
         }
-
     }
 
+    @FlowPreview
+    @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
     @SuppressLint("SetTextI18n")
     @MainThread
     fun onConfigDone(timeLineMap: Map<Int, HistoricEvent>) {
+        viewModel.currentRegion.observe(viewLifecycleOwner) {
+            service?.addLayer(it)
+        }
         progressBar.visibility = View.GONE
         sb_year.max = timeLineMap.size - 1
-        launch {
-            callbackFlow<Pair<Int, JSONObject?>> {
+        launch(Dispatchers.Main) {
+            callbackFlow<Int> {
                 sb_year.setListener { progress ->
                     viewModel.getYearIndexed(progress)?.let {
-                        curYear = it
-                        offer(it to viewModel.getRegionJsonByYear(it))
+                        offer(it)
                     }
                 }
                 awaitClose {
                     sb_year?.setOnSeekBarChangeListener(null)
                 }
-            }.debounce(600L)
+            }
+                .debounce(600L)
                 .collect {
                     service?.clearMap()
-                    it.second?.let { it1 -> service?.addLayer(it1) }
-
-                    tv_year.text = "${it.first} year"
+                    viewModel.setYear(it)
+                    tv_year.text = "$it year"
                 }
         }
     }

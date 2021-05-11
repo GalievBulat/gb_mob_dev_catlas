@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="year"
             type="Integer" />
-
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background">
@@ -19,8 +19,8 @@
             android:id="@+id/iv_backgr"
             android:layout_width="0dp"
             android:layout_height="0dp"
-        android:padding="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/sb_year"
+            android:padding="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/sb_year"
         app:layout_constraintEnd_toEndOf="@+id/iv_map"
         app:layout_constraintStart_toStartOf="@+id/iv_map"
         app:layout_constraintTop_toTopOf="@+id/iv_map"
@@ -51,31 +51,31 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/header" />
 
-    <TextView
-        android:id="@+id/tv_header"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="Map"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tv_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Map"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_header"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <SeekBar
-        android:id="@+id/sb_year"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:max="100"
-        android:thumb="@android:drawable/ic_menu_recent_history"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/iv_backgr"
-        app:layout_constraintStart_toStartOf="@+id/iv_backgr"
+        <SeekBar
+            android:id="@+id/sb_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:thumb="@android:drawable/ic_menu_recent_history"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/iv_backgr"
+            app:layout_constraintStart_toStartOf="@+id/iv_backgr"
         app:layout_constraintTop_toBottomOf="@+id/tv_header"
         app:layout_constraintVertical_bias="1.0" />
 
@@ -130,6 +130,18 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iv_header" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="context"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_backgr"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_backgr"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

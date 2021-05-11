@@ -1,6 +1,7 @@
 package com.kakadurf.catlas.presentation.map.maintaining
 
 import android.graphics.Color
+import androidx.annotation.MainThread
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -51,6 +52,7 @@ class MapMaintainingServiceImpl(
         mMap.setMapStyle(mapStyle)
     }
 
+    @MainThread
     override fun addLayer(json: JSONObject) {
         println(GeoJsonParser.parseGeometry(json)?.geometryType)
         val layer = GeoJsonLayer(
@@ -69,13 +71,6 @@ class MapMaintainingServiceImpl(
         layer.setOnFeatureClickListener {
             onClickListener(it)
         }
-        /*layer.setOnFeatureClickListener {
-            onClickListener(it)
-            currentLand?.polygonStyle = defaultStyle
-            currentLand = (it as? GeoJsonFeature)?.apply {
-                polygonStyle = selectedStyle
-            }
-        }*/
         layer.addLayerToMap()
         // ###
         layer.features.firstOrNull()?.run {

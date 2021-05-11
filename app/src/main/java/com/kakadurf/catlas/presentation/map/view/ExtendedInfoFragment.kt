@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.kakadurf.catlas.R
-import kotlinx.android.synthetic.main.fr_description.tv_description
+import kotlinx.android.synthetic.main.fr_description.tv_context_description
 
 class ExtendedInfoFragment : Fragment() {
     override fun onCreateView(
@@ -21,7 +21,7 @@ class ExtendedInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tv_description.movementMethod = ScrollingMovementMethod()
-        tv_description.text = arguments?.getString("description")
+        tv_context_description.movementMethod = ScrollingMovementMethod()
+        tv_context_description.text = arguments?.getString("description")
     }
 }

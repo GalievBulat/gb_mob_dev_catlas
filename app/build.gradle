@@ -44,6 +44,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+    //###
     implementation 'com.google.maps.android:android-maps-utils:2.2.0'
     implementation 'com.google.maps.android:maps-utils-ktx:3.0.0'
     //###

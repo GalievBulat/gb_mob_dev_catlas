@@ -1,12 +1,13 @@
 package com.kakadurf.catlas.presentation.map.service
 
 import android.content.Context
+import androidx.annotation.WorkerThread
 import com.google.maps.android.data.geojson.GeoJsonFeature
 import com.google.maps.android.data.geojson.GeoJsonParser
 import org.json.JSONObject
 import javax.inject.Inject
 
-class LocalGeo @Inject constructor() {
+class LocalGeo @Inject constructor(val context: Context) {
     val fileNamesList: Map<Int, String> = mapOf(
         -2000 to "world_bc2000.geojson",
         -1000 to "world_bc1000.geojson",
@@ -39,50 +40,48 @@ class LocalGeo @Inject constructor() {
     ) =
         GeoJsonParser(jsonObject).features
             .find {
-                it.getProperty("NAME") == region
-                        ||
+                it.getProperty("NAME") == region ||
                         it.getProperty("ABBREVNAME") == region
             }
 
     fun getFeaturesRegion(feature: GeoJsonFeature): String? =
         feature.getProperty("NAME") ?: feature.getProperty("ABBREVNAME")
 
-    fun getFittestFile(year: Int) =
+    fun getFittestDate(year: Int) =
         when (year) {
-            in -1500..-750 -> "world_bc1000.geojson"
-            in -750..-400 -> "world_bc500.geojson"
-            in -400..-250 -> "world_bc323.geojson"
-            in -250..-100 -> "world_bc200.geojson"
-            in -100..200 -> "world_bc1.geojson"
-            in 200..500 -> "world_400.geojson"
-            in 500..700 -> "world_600.geojson"
-            in 700..900 -> "world_800.geojson"
-            in 900..1100 -> "world_1000.geojson"
-            in 1100..1400 -> "world_1279.geojson"
-            in 1400..1500 -> "world_1492.geojson"
-            in 1500..1600 -> "world_1530.geojson"
-            in 1600..1700 -> "world_1650.geojson"
-            in 1700..1750 -> "world_1715.geojson"
-            in 1750..1800 -> "world_1783.geojson"
-            in 1800..1850 -> "world_1815.geojson"
-            in 1850..1900 -> "world_1880.geojson"
-            in 1900..1918 -> "world_1914.geojson"
-            in 1918..1930 -> "world_1920.geojson"
-            in 1930..1945 -> "world_1938.geojson"
-            in 1945..1980 -> "world_1945.geojson"
-            in 1980..2100 -> "world_1994.geojson"
-            else -> "world_bc2000.geojson"
+            in -1500..-750 -> -1000
+            in -750..-400 -> -500
+            in -400..-250 -> -323
+            in -250..-100 -> -200
+            in -100..200 -> -1
+            in 200..500 -> 400
+            in 500..700 -> 600
+            in 700..900 -> 800
+            in 900..1100 -> 1000
+            in 1100..1400 -> 1279
+            in 1400..1500 -> 1492
+            in 1500..1600 -> 1530
+            in 1600..1700 -> 1650
+            in 1700..1750 -> 1715
+            in 1750..1800 -> 1783
+            in 1800..1850 -> 1815
+            in 1850..1900 -> 1880
+            in 1900..1918 -> 1914
+            in 1918..1930 -> 1920
+            in 1930..1945 -> 1938
+            in 1945..1980 -> 1945
+            in 1980..2100 -> 1994
+            else -> 2000
         }
 
-    //TODO(SUSPEND!!!)
-    fun getAllLocalFeatures(context: Context): Map<String, Pair<Int, JSONObject>> =
+    @WorkerThread
+    fun getAllLocalFeatures(): Map<String, Pair<Int, JSONObject>> =
         HashMap<String, Pair<Int, JSONObject>>().also { map ->
             fileNamesList.forEach {
                 context.assets
                     .open("historicalmaps/" + it.value).reader().use { reader ->
-                        val json = JSONObject(
-                            reader.readText()
-                        )
+                        //TODO(fix)
+                        val json = JSONObject(reader.buffered().readText())
                         GeoJsonParser(
                             json
                         ).features.forEach { feature ->
@@ -93,6 +92,4 @@ class LocalGeo @Inject constructor() {
                     }
             }
         }
-
-
 }

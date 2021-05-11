@@ -4,7 +4,6 @@ import android.content.Context
 import com.kakadurf.catlas.data.timeline.db.CachingDB
 import com.kakadurf.catlas.data.timeline.db.DBCacheDao
 import com.kakadurf.catlas.presentation.general.di.annotation.AppScope
-import com.kakadurf.catlas.presentation.map.service.LocalGeo
 import dagger.Module
 import dagger.Provides
 
@@ -12,8 +11,8 @@ import dagger.Provides
 class DBModule {
     @AppScope
     @Provides
-    fun getDataBase(context: Context, localGeo: LocalGeo) =
-        CachingDB.create(context, localGeo)
+    fun getDataBase(context: Context) =
+        CachingDB.create(context)
 
     @Provides
     @AppScope
