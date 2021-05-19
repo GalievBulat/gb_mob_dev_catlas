@@ -1,4 +1,4 @@
-package com.kakadurf.catlas.presentation.map.view
+package com.kakadurf.catlas.presentation.map.view.fragment
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod

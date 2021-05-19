@@ -1,7 +1,8 @@
 package com.kakadurf.catlas.presentation.general.di.component
 
 import com.kakadurf.catlas.data.timeline.module.HttpRegionModule
-import com.kakadurf.catlas.data.timeline.module.HttpWikiModule
+import com.kakadurf.catlas.data.timeline.module.HttpWikiArticleFetchingModule
+import com.kakadurf.catlas.data.timeline.module.HttpWikiImageFetchingModule
 import com.kakadurf.catlas.domain.wiki.module.WikiModule
 import com.kakadurf.catlas.presentation.general.di.annotation.MapScope
 import com.kakadurf.catlas.presentation.map.di.MapViewModelBindingModule
@@ -13,7 +14,8 @@ import dagger.Subcomponent
 @MapScope
 @Subcomponent(
     modules = [
-        HttpWikiModule::class, HttpRegionModule::class,
+        HttpWikiArticleFetchingModule::class, HttpWikiImageFetchingModule::class,
+        HttpRegionModule::class,
         WikiModule::class, MapViewModelBindingModule::class,
         MapViewModelModule::class
     ]

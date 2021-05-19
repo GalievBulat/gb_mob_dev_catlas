@@ -3,7 +3,7 @@ package com.kakadurf.catlas.data.timeline.http.wiki
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface WikiHttpRetriever {
+interface WikiArticleHttpRetrofit {
     @GET("/w/api.php")
     suspend fun getWikiPageSection(
         @Query("page") page: String,

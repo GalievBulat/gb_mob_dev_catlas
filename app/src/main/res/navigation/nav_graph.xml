@@ -15,6 +15,16 @@
                 android:name="description"
                 android:defaultValue="@null" />
         </action>
+        <action
+            android:id="@+id/action_mainFragment_to_contextFragment2"
+            app:destination="@id/contextFragment">
+
+            <argument
+                android:name="config"
+                android:defaultValue="@null"
+                app:argType="com.kakadurf.catlas.domain.data.ConfigurationContext"
+                app:nullable="true" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
@@ -26,6 +36,10 @@
     </fragment>
     <fragment
         android:id="@+id/extendedInfoFragment"
-        android:name="com.kakadurf.catlas.presentation.map.view.ExtendedInfoFragment"
+        android:name="com.kakadurf.catlas.presentation.map.view.fragment.ExtendedInfoFragment"
         android:label="ExtendedInfoFragment" />
+    <fragment
+        android:id="@+id/contextFragment"
+        android:name="com.kakadurf.catlas.presentation.map.view.fragment.ContextFragment"
+        android:label="ContextFragment" />
 </navigation>

@@ -41,7 +41,7 @@ class LocalGeo @Inject constructor(val context: Context) {
         GeoJsonParser(jsonObject).features
             .find {
                 it.getProperty("NAME") == region ||
-                        it.getProperty("ABBREVNAME") == region
+                    it.getProperty("ABBREVNAME") == region
             }
 
     fun getFeaturesRegion(feature: GeoJsonFeature): String? =
@@ -80,7 +80,7 @@ class LocalGeo @Inject constructor(val context: Context) {
             fileNamesList.forEach {
                 context.assets
                     .open("historicalmaps/" + it.value).reader().use { reader ->
-                        //TODO(fix)
+                        // TODO(fix)
                         val json = JSONObject(reader.buffered().readText())
                         GeoJsonParser(
                             json

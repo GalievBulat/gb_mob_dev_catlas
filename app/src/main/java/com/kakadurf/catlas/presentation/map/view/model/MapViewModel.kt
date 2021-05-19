@@ -1,5 +1,6 @@
 package com.kakadurf.catlas.presentation.map.view.model
 
+import android.content.Context
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,8 +10,10 @@ import com.kakadurf.catlas.data.timeline.db.CachedEntity
 import com.kakadurf.catlas.data.timeline.db.DBCacheDao
 import com.kakadurf.catlas.data.timeline.http.wiki.HistoricEvent
 import com.kakadurf.catlas.data.timeline.http.wiki.WikiPageRepository
+import com.kakadurf.catlas.domain.data.Configuration
 import com.kakadurf.catlas.domain.wiki.parser.WikiTextCleanUp
 import com.kakadurf.catlas.domain.wiki.parser.WikipediaParser
+import com.kakadurf.catlas.presentation.map.service.ConfigurationParser
 import com.kakadurf.catlas.presentation.map.service.LocalGeo
 import com.kakadurf.catlas.presentation.map.service.MapInflater
 import kotlinx.coroutines.Dispatchers
@@ -44,11 +47,14 @@ class MapViewModel : ViewModel() {
     private val mMapConfigCompletion: MutableLiveData<Boolean> = MutableLiveData()
     private val mCurrentRegion: MutableLiveData<JSONObject> = MutableLiveData()
 
-    //val currentYear: LiveData<Int> = mCurrentYear
+    private val mCurrentConfiguration: MutableLiveData<Configuration> = MutableLiveData()
+
+
+    val currentConfiguration: LiveData<Configuration> = mCurrentConfiguration
+    val currentYear: LiveData<Int> = mCurrentYear
     val currentRegion: LiveData<JSONObject> = mCurrentRegion
     val timeLineMap: LiveData<TreeMap<Int, HistoricEvent>> = mTimeLineMap
-    //val mapConfigCompletion: LiveData<Boolean> = mMapConfigCompletion
-
+    // val mapConfigCompletion: LiveData<Boolean> = mMapConfigCompletion
 
     private suspend fun parseArticle(article: String) {
         val rowText = wikiRepository.getAllWikiTextFromPage(article)
@@ -65,12 +71,13 @@ class MapViewModel : ViewModel() {
         }
 
     fun setYear(year: Int) {
+        mCurrentYear.value = year
         viewModelScope.launch(Dispatchers.IO) {
             mTimeLineMap.value?.run {
                 val region = get(year)?.region
                 region?.let {
                     dao.pullFromDB(region, year)?.json?.let {
-                        mCurrentRegion.postValue(JSONObject(it.toString()))
+                        mCurrentRegion.postValue(JSONObject(String(it)))
                     }
                 }
             }
@@ -78,10 +85,14 @@ class MapViewModel : ViewModel() {
     }
 
     fun getInfoByYear(year: Int): HistoricEvent? = mTimeLineMap.value?.get(year)
-    fun fetchDataForMap(article: String) {
+
+    fun setConfiguration(context: Context, path: String = "epochs.json") {
         viewModelScope.launch(Dispatchers.IO) {
-            //getLocalRegions()
-            parseArticle(article)
+            val configuration = (ConfigurationParser(
+                context, "config_files/$path"
+            ).configuration)
+            mCurrentConfiguration.postValue(configuration)
+            parseArticle(configuration.article)
         }
     }
 

@@ -51,22 +51,6 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/header" />
 
-        <TextView
-            android:id="@+id/tv_header"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
-            android:text="Map"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_header"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <SeekBar
             android:id="@+id/sb_year"
             android:layout_width="0dp"
@@ -75,9 +59,7 @@
             android:thumb="@android:drawable/ic_menu_recent_history"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/iv_backgr"
-            app:layout_constraintStart_toStartOf="@+id/iv_backgr"
-        app:layout_constraintTop_toBottomOf="@+id/tv_header"
-        app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintStart_toStartOf="@+id/iv_backgr" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -124,6 +106,7 @@
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#FFFFFF"
             android:gravity="start"
             app:layout_constraintBottom_toBottomOf="@+id/iv_header"
             app:layout_constraintEnd_toEndOf="parent"
@@ -132,7 +115,7 @@
             app:layout_constraintTop_toTopOf="@+id/iv_header" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/bt_ctxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="context"

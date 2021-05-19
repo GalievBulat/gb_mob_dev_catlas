@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.MainThread
 import androidx.fragment.app.Fragment
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
@@ -39,13 +41,10 @@ class MapFragment(
 ) : Fragment(), CoroutineScope {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
     @Inject
     lateinit var viewModel: MapViewModel
-
     private var mapFragment: SupportMapFragment? = null
     private var service: MapMaintainingService? = null
-    private var curYear: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ApplicationImpl.getMapComp()?.inject(this)
@@ -55,7 +54,6 @@ class MapFragment(
                 .get(MapViewModel::class.java).also { map ->
                     ApplicationImpl.getMapComp()?.inject(map)
                 }
-            viewModel.fetchDataForMap("Timeline_of_historic_inventions")
         }
     }
 
@@ -65,28 +63,24 @@ class MapFragment(
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        /*val binding: FrMapBinding =
-            DataBindingUtil.setContentView(requireActivity(), R.layout.fr_map)
-        return binding.root*/
         return inflater.inflate(R.layout.fr_map, container, false)
     }
 
     @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.let {
-            val adapter = ArrayAdapter(
-                it,
-                android.R.layout.simple_spinner_item, arrayOf("Historic Inventions")
-            )
-            spinner.adapter = adapter
-            mapFragment = childFragmentManager.findFragmentById(R.id.iv_map) as? SupportMapFragment
-            configureMap()
-            viewModel.timeLineMap.observe(viewLifecycleOwner) { map ->
-                // fix recreate issue
-                onConfigDone(map)
-            }
+        mapFragment =
+            childFragmentManager.findFragmentById(R.id.iv_map) as? SupportMapFragment
+        setUpSpinner()
+        configureMap()
+        viewModel.timeLineMap.observe(viewLifecycleOwner) { map ->
+            onConfigDone(map)
         }
+    }
+
+    override fun onDestroy() {
+        ApplicationImpl.invalidateMap()
+        super.onDestroy()
     }
 
     @FlowPreview
@@ -97,6 +91,21 @@ class MapFragment(
     fun onConfigDone(timeLineMap: Map<Int, HistoricEvent>) {
         viewModel.currentRegion.observe(viewLifecycleOwner) {
             service?.addLayer(it)
+        }
+        viewModel.currentYear.observe(viewLifecycleOwner) {
+            tv_year.text = "$it year"
+        }
+        bt_ctxt.setOnClickListener {
+            val year = viewModel.currentYear.value
+            year?.let {
+                val directions = MapFragmentDirections
+                    .actionMainFragmentToContextFragment2(
+                        viewModel.currentConfiguration.value?.context?.find {
+                            it.startingDate <= year && it.endingDate > year
+                        }
+                    )
+                findNavController().navigate(directions)
+            }
         }
         progressBar.visibility = View.GONE
         sb_year.max = timeLineMap.size - 1
@@ -115,8 +124,36 @@ class MapFragment(
                 .collect {
                     service?.clearMap()
                     viewModel.setYear(it)
-                    tv_year.text = "$it year"
                 }
+        }
+    }
+
+    private fun setUpSpinner() {
+        activity?.let { activity ->
+            val configs = (activity.assets
+                .list("config_files") ?: arrayOf<String>())
+                .filter { it.endsWith(".json") }
+                .toTypedArray()
+            val adapter = ArrayAdapter(
+                activity,
+                android.R.layout.simple_spinner_item,
+                configs
+            )
+            spinner.adapter = adapter
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+
+                    Timber.d(configs.get(position)?.toString())
+                    viewModel.setConfiguration(activity, configs[position].toString())
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
         }
     }
 
@@ -128,7 +165,7 @@ class MapFragment(
                 MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
             )
             service?.setOnClickListener {
-                curYear?.let { year ->
+                viewModel.currentYear.value?.let { year ->
                     val directions =
                         MapFragmentDirections.actionMainFragmentToExtendedInfoFragment(
                             viewModel.getInfoByYear(year)?.description

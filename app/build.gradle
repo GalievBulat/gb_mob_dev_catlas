@@ -44,6 +44,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    //###
     implementation 'com.jakewharton.timber:timber:4.7.1'
     //###
     implementation 'com.google.maps.android:android-maps-utils:2.2.0'

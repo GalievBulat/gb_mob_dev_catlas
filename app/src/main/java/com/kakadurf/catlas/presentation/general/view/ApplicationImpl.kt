@@ -7,7 +7,6 @@ import com.kakadurf.catlas.presentation.general.di.component.MapComponent
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
-
 class ApplicationImpl :
     Application() {
     companion object {

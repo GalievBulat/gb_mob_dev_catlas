@@ -22,7 +22,11 @@ class MenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         button.setOnClickListener {
-            findNavController().navigate(R.id.mainFragment)
+            findNavController().navigate(R.id.action_menuFragment_to_mainFragment)
         }
+        /*
+            button3.setOnClickListener{
+                findNavController().navigate(R.id.action_menuFragment_to_contextFragment)
+            }*/
     }
 }

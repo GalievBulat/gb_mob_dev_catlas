@@ -3,7 +3,7 @@ package com.kakadurf.catlas.data.timeline.module
 import com.kakadurf.catlas.BuildConfig
 import com.kakadurf.catlas.data.timeline.http.service.addQueriesToInterceptor
 import com.kakadurf.catlas.data.timeline.http.service.loggingInterceptor
-import com.kakadurf.catlas.data.timeline.http.wiki.WikiHttpRetriever
+import com.kakadurf.catlas.data.timeline.http.wiki.WikiArticleHttpRetrofit
 import com.kakadurf.catlas.presentation.general.di.annotation.MapScope
 import dagger.Module
 import dagger.Provides
@@ -20,7 +20,7 @@ const val WIKI_RETROFIT_TAG = "wiki_retrofit"
 const val WIKI_TIMEOUT = 30L
 
 @Module
-class HttpWikiModule {
+class HttpWikiArticleFetchingModule {
     @Provides
     @MapScope
     @Named(WIKI_INTERCEPTOR_TAG)
@@ -54,7 +54,8 @@ class HttpWikiModule {
 
     @Provides
     @MapScope
-    fun getService(@Named(WIKI_RETROFIT_TAG) retrofit: Retrofit) = retrofit.create(
-        WikiHttpRetriever::class.java
-    )
+    fun getService(@Named(WIKI_RETROFIT_TAG) retrofit: Retrofit): WikiArticleHttpRetrofit =
+        retrofit.create(
+            WikiArticleHttpRetrofit::class.java
+        )
 }
