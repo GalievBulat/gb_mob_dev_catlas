@@ -14,7 +14,7 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <ImageView
-        android:id="@+id/iv_context_header_description"
+        android:id="@+id/iv_context_header"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,11 +49,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_context_header_description"
+        app:layout_constraintTop_toBottomOf="@+id/iv_context_header"
         app:srcCompat="@drawable/header" />
 
     <ScrollView
-        android:id="@+id/sv"
+        android:id="@+id/scrollview_context"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_context_text_background"
@@ -85,10 +85,10 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/vp_context" />
+                app:layout_constraintTop_toBottomOf="@+id/vp_context_pictures" />
 
             <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/vp_context"
+                android:id="@+id/vp_context_pictures"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 app:layout_constraintBottom_toBottomOf="parent"

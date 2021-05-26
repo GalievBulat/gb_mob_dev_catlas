@@ -17,7 +17,7 @@ class ApplicationImpl :
         fun getMapComp(): MapComponent? =
             if (mapComponent == null) appComponent?.plusMap()?.build() else mapComponent
 
-        fun invalidateMap() {
+        fun invalidateMapComponent() {
             mapComponent = null
         }
 

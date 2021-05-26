@@ -2,21 +2,21 @@ package com.kakadurf.catlas.presentation.map.service
 
 import android.content.Context
 import com.google.gson.Gson
-import com.kakadurf.catlas.domain.data.Configuration
-import com.kakadurf.catlas.domain.data.ConfigurationContext
+import com.kakadurf.catlas.domain.config.LocalConfiguration
+import com.kakadurf.catlas.domain.config.LocalConfigurationContext
 
 class ConfigurationParser(context: Context, configPath: String) {
-    val configuration: Configuration = Gson().fromJson(
+    val localConfiguration: LocalConfiguration = Gson().fromJson(
         context.assets.open(configPath).reader(),
-        Configuration::class.java
+        LocalConfiguration::class.java
     )
     private val configurationContext =
         Gson().fromJson(
-            context.assets.open(configuration.contextPath).reader(),
-            Array<ConfigurationContext>::class.java
+            context.assets.open(localConfiguration.contextPath).reader(),
+            Array<LocalConfigurationContext>::class.java
         )
 
     init {
-        configuration.context = configurationContext
+        localConfiguration.contexts = configurationContext.toList()
     }
 }

@@ -1,11 +1,9 @@
 package com.kakadurf.catlas.presentation.map.view.fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.MainThread
 import androidx.fragment.app.Fragment
@@ -14,17 +12,18 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.kakadurf.catlas.R
-import com.kakadurf.catlas.data.timeline.http.wiki.HistoricEvent
+import com.kakadurf.catlas.domain.wiki.parser.HistoricEvent
 import com.kakadurf.catlas.presentation.general.view.ApplicationImpl
 import com.kakadurf.catlas.presentation.map.maintaining.MapMaintainingService
 import com.kakadurf.catlas.presentation.map.maintaining.MapMaintainingServiceImpl
 import com.kakadurf.catlas.presentation.map.service.setListener
+import com.kakadurf.catlas.presentation.map.view.SpinnerOnSelectedListenerExtention
+import com.kakadurf.catlas.presentation.map.view.managing.AnimationManaging
 import com.kakadurf.catlas.presentation.map.view.model.MapViewModel
 import kotlinx.android.synthetic.main.fr_map.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
@@ -41,11 +40,15 @@ class MapFragment(
 ) : Fragment(), CoroutineScope {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject
     lateinit var viewModel: MapViewModel
-    private var mapFragment: SupportMapFragment? = null
-    private var service: MapMaintainingService? = null
 
+    @Inject
+    lateinit var animationManaging: AnimationManaging
+
+    @Inject
+    lateinit var spinnerOnSelectedListenerExtention: SpinnerOnSelectedListenerExtention
+
+    private lateinit var mapService: MapMaintainingService
     override fun onCreate(savedInstanceState: Bundle?) {
         ApplicationImpl.getMapComp()?.inject(this)
         super.onCreate(savedInstanceState)
@@ -69,102 +72,74 @@ class MapFragment(
     @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mapFragment =
-            childFragmentManager.findFragmentById(R.id.iv_map) as? SupportMapFragment
-        setUpSpinner()
-        configureMap()
+        createMapService()
+        startTheShow()
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.timeLineMap.observe(viewLifecycleOwner) { map ->
-            onConfigDone(map)
+            onTimelineReady(map)
         }
     }
 
     override fun onDestroy() {
-        ApplicationImpl.invalidateMap()
+        viewModel.onMapDestroyed()
+        ApplicationImpl.invalidateMapComponent()
         super.onDestroy()
     }
 
-    @FlowPreview
-    @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
-    @SuppressLint("SetTextI18n")
+    private fun startTheShow() {
+        animationManaging
+            .startLoading(
+                tv_map_loading1, tv_map_loading1_2,
+                tv_map_loading2, tv_map_loading2_2, iv_map_loading_backgound
+            )
+        setUpSpinner()
+    }
+
     @MainThread
-    fun onConfigDone(timeLineMap: Map<Int, HistoricEvent>) {
-        viewModel.currentRegion.observe(viewLifecycleOwner) {
-            service?.addLayer(it)
-        }
+    private fun onTimelineReady(timeLineMap: Map<Int, HistoricEvent>) {
         viewModel.currentYear.observe(viewLifecycleOwner) {
-            tv_year.text = "$it year"
+            tv_map_year.text = "$it year"
         }
-        bt_ctxt.setOnClickListener {
+        animationManaging.stopLoading(
+            tv_map_loading1, tv_map_loading1_2,
+            tv_map_loading2, tv_map_loading2_2, iv_map_loading_backgound
+        )
+        viewModel.mapConfigurationCompletion.observe(viewLifecycleOwner) {
+            if (it) {
+                inflateMapWithTimeline(timeLineMap, mapService)
+            }
+        }
+        bt_map_ctxt.setOnClickListener {
             val year = viewModel.currentYear.value
             year?.let {
-                val directions = MapFragmentDirections
-                    .actionMainFragmentToContextFragment2(
-                        viewModel.currentConfiguration.value?.context?.find {
+                val directions =
+                    MapFragmentDirections.actionMainFragmentToContextFragment2(
+                        viewModel.currentLocalConfiguration.value?.contexts?.find {
                             it.startingDate <= year && it.endingDate > year
                         }
                     )
                 findNavController().navigate(directions)
             }
         }
-        progressBar.visibility = View.GONE
-        sb_year.max = timeLineMap.size - 1
-        launch(Dispatchers.Main) {
-            callbackFlow<Int> {
-                sb_year.setListener { progress ->
-                    viewModel.getYearIndexed(progress)?.let {
-                        offer(it)
-                    }
-                }
-                awaitClose {
-                    sb_year?.setOnSeekBarChangeListener(null)
-                }
-            }
-                .debounce(600L)
-                .collect {
-                    service?.clearMap()
-                    viewModel.setYear(it)
-                }
-        }
-    }
-
-    private fun setUpSpinner() {
-        activity?.let { activity ->
-            val configs = (activity.assets
-                .list("config_files") ?: arrayOf<String>())
-                .filter { it.endsWith(".json") }
-                .toTypedArray()
-            val adapter = ArrayAdapter(
-                activity,
-                android.R.layout.simple_spinner_item,
-                configs
-            )
-            spinner.adapter = adapter
-            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-
-                    Timber.d(configs.get(position)?.toString())
-                    viewModel.setConfiguration(activity, configs[position].toString())
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-            }
-        }
     }
 
     @MainThread
-    private fun configureMap() {
+    private fun createMapService() {
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.fr_map) as? SupportMapFragment
         mapFragment?.getMapAsync { maps ->
-            service = MapMaintainingServiceImpl(
+            mapService = MapMaintainingServiceImpl(
                 maps,
-                MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
+                MapStyleOptions.loadRawResourceStyle(
+                    context,
+                    R.raw.map_style
+                )
             )
-            service?.setOnClickListener {
+            mapService.setOnClickListener {
                 viewModel.currentYear.value?.let { year ->
                     val directions =
                         MapFragmentDirections.actionMainFragmentToExtendedInfoFragment(
@@ -173,6 +148,67 @@ class MapFragment(
                     findNavController().navigate(directions)
                 }
             }
+            viewModel.onMapConfigured()
+        }
+    }
+
+    private fun setUpSpinner() {
+        activity?.let { activity ->
+            viewModel.getAllConfigNames()
+            viewModel.configurationNames.observe(viewLifecycleOwner) { configs ->
+                val adapter = ArrayAdapter(
+                    activity,
+                    android.R.layout.simple_spinner_item,
+                    configs
+                )
+                spinner_map_configuration_chooser.adapter = adapter
+                viewModel.currentLocalConfiguration.observe(viewLifecycleOwner) { config ->
+                    var index = configs.indexOf(config.name)
+                    if (index == -1)
+                        index = 0
+                    spinner_map_configuration_chooser.setSelection(index)
+                }
+                spinnerOnSelectedListenerExtention.run {
+                    spinner_map_configuration_chooser.setSelectListener { position ->
+                        Timber.d(configs[position])
+                        if (configs[position] != viewModel.currentLocalConfiguration.value?.name) {
+                            viewModel.setConfiguration(configs[position])
+                            animationManaging.startLoading(
+                                tv_map_loading1, tv_map_loading1_2,
+                                tv_map_loading2, tv_map_loading2_2, iv_map_loading_backgound
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    private fun inflateMapWithTimeline(
+        timeLineMap: Map<Int, HistoricEvent>,
+        service: MapMaintainingService
+    ) {
+        viewModel.currentRegion.observe(viewLifecycleOwner) {
+            service.addLayer(it)
+        }
+        seekbar_map_year.max = timeLineMap.size - 1
+        launch(Dispatchers.Main) {
+            callbackFlow<Int> {
+                seekbar_map_year.setListener { progress ->
+                    viewModel.getYearIndexed(progress)?.let {
+                        offer(it)
+                    }
+                }
+                awaitClose {
+                    seekbar_map_year?.setOnSeekBarChangeListener(null)
+                }
+            }
+                .debounce(600L)
+                .collect {
+                    service.clearMap()
+                    viewModel.setYear(it)
+                }
         }
     }
 }

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:scrollbarThumbVertical="@android:drawable/status_bar_item_background"
+    android:scrollbarTrackVertical="@android:drawable/status_bar_item_background"
+    android:scrollbars="vertical"
+    android:verticalScrollbarPosition="right"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <ImageView
+        android:id="@+id/iv_config_adding_header_description"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/header" />
+
+    <TextView
+        android:id="@+id/tv_config_header_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Create a new configuration"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_map_header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_config_text_background"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_config_adding_header_description"
+        app:srcCompat="@drawable/header" />
+
+    <EditText
+        android:id="@+id/et_config_name"
+        style="@style/Widget.AppCompat.EditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="Enter Context name"
+        android:inputType="textPersonName"
+        android:textColor="@color/background"
+        android:textColorHighlight="@color/background"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_config_text_background"
+        app:layout_constraintEnd_toEndOf="@+id/iv_config_text_background"
+        app:layout_constraintStart_toStartOf="@+id/iv_config_text_background"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_config_contexts"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/et_config_article"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:freezesText="false"
+        android:hint="Enter Wikipedia article 'wikiname' (One specified after wikipedia.com/ ex. Timeline_of_human_history)"
+        android:inputType="textUri|textMultiLine"
+        android:maxLines="5"
+        android:singleLine="false"
+        android:textColor="@color/background"
+        android:textColorHint="@color/background"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_config_text_background"
+        app:layout_constraintEnd_toEndOf="@+id/iv_config_text_background"
+        app:layout_constraintStart_toStartOf="@+id/iv_config_text_background"
+        app:layout_constraintTop_toBottomOf="@+id/et_config_name"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Spinner
+        android:id="@+id/spinner_config_contexts"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_config_text_background"
+        app:layout_constraintEnd_toEndOf="@+id/iv_config_text_background"
+        app:layout_constraintStart_toStartOf="@+id/iv_config_text_background"
+        app:layout_constraintTop_toTopOf="@+id/iv_config_text_background"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/bt_config_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/iv_config_text_background"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/iv_config_text_background"
+        app:layout_constraintTop_toBottomOf="@+id/iv_config_text_background"
+        app:layout_constraintVertical_bias="0.96" />
+</androidx.constraintlayout.widget.ConstraintLayout>

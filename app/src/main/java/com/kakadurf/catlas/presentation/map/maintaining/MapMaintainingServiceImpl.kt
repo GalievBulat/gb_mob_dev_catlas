@@ -13,7 +13,6 @@ import com.google.maps.android.collections.PolygonManager
 import com.google.maps.android.collections.PolylineManager
 import com.google.maps.android.data.Feature
 import com.google.maps.android.data.geojson.GeoJsonLayer
-import com.google.maps.android.data.geojson.GeoJsonParser
 import com.kakadurf.catlas.R
 import org.json.JSONObject
 
@@ -26,15 +25,7 @@ class MapMaintainingServiceImpl(
 ) :
     MapMaintainingService {
 
-    /*
-    private val selectedStyle = GeoJsonPolygonStyle().apply {
-        fillColor = Color.parseColor(MAP_SELECTED_COLOUR)
-        strokeColor = Color.WHITE
-        strokeWidth = MAP_REGION_STROKE
-    }
-    private var currentLand: GeoJsonFeature? = null*/
     private var onClickListener: (Feature) -> Unit = {}
-
     private val markerManager = MarkerManager(mMap)
     private val groundOverlayManager = GroundOverlayManager(mMap)
     private val polygonManager = PolygonManager(mMap)
@@ -54,7 +45,6 @@ class MapMaintainingServiceImpl(
 
     @MainThread
     override fun addLayer(json: JSONObject) {
-        println(GeoJsonParser.parseGeometry(json)?.geometryType)
         val layer = GeoJsonLayer(
             mMap,
             json,
@@ -72,7 +62,6 @@ class MapMaintainingServiceImpl(
             onClickListener(it)
         }
         layer.addLayerToMap()
-        // ###
         layer.features.firstOrNull()?.run {
             this.pointStyle.icon = BitmapDescriptorFactory
                 .fromResource(R.mipmap.ic_launcher_foreground)

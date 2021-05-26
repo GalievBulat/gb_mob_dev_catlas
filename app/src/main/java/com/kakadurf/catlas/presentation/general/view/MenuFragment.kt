@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.kakadurf.catlas.R
-import kotlinx.android.synthetic.main.fr_menu.button
+import kotlinx.android.synthetic.main.fr_menu.bt_menu_create_config
+import kotlinx.android.synthetic.main.fr_menu.bt_menu_map
 
 class MenuFragment : Fragment() {
     override fun onCreateView(
@@ -21,8 +22,11 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        button.setOnClickListener {
+        bt_menu_map.setOnClickListener {
             findNavController().navigate(R.id.action_menuFragment_to_mainFragment)
+        }
+        bt_menu_create_config.setOnClickListener {
+            findNavController().navigate(R.id.action_menuFragment_to_configurationCreationFragment)
         }
         /*
             button3.setOnClickListener{

@@ -3,128 +3,184 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="year"
-            type="Integer" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_map_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background">
 
         <ImageView
-            android:id="@+id/iv_backgr"
+            android:id="@+id/iv_map_backgr"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="24dp"
-            app:layout_constraintBottom_toTopOf="@+id/sb_year"
-        app:layout_constraintEnd_toEndOf="@+id/iv_map"
-        app:layout_constraintStart_toStartOf="@+id/iv_map"
-        app:layout_constraintTop_toTopOf="@+id/iv_map"
-        app:srcCompat="@drawable/header" />
+            app:layout_constraintBottom_toTopOf="@+id/seekbar_map_year"
+            app:layout_constraintEnd_toEndOf="@+id/fr_map"
+            app:layout_constraintStart_toStartOf="@+id/fr_map"
+            app:layout_constraintTop_toTopOf="@+id/fr_map"
+            app:srcCompat="@drawable/header" />
 
-    <fragment
-        android:id="@+id/iv_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:padding="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/sb_year"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_header"
-        app:srcCompat="@drawable/world_map_png28"
-        tools:context=".presentation.general.view.MainActivity" />
+        <fragment
+            android:id="@+id/fr_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:padding="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/seekbar_map_year"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_map_header"
+            tools:context=".presentation.general.view.MainActivity" />
 
-    <ImageView
-        android:id="@+id/iv_header"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/header" />
+        <ImageView
+            android:id="@+id/iv_map_header"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/header" />
 
         <SeekBar
-            android:id="@+id/sb_year"
+            android:id="@+id/seekbar_map_year"
+            style="@style/Widget.AppCompat.SeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:max="100"
-            android:thumb="@android:drawable/ic_menu_recent_history"
+            android:progressTint="#000000"
+            android:thumb="?android:attr/listChoiceIndicatorSingle"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/iv_backgr"
-            app:layout_constraintStart_toStartOf="@+id/iv_backgr" />
+            app:layout_constraintEnd_toEndOf="@+id/iv_map_backgr"
+            app:layout_constraintStart_toStartOf="@+id/iv_map_backgr"
+            app:layout_constraintTop_toBottomOf="@id/fr_map"
+            app:layout_constraintVertical_bias="0.0" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="64dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        <ImageView
+            android:id="@+id/iv_map_year_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_map_year"
+            app:layout_constraintEnd_toEndOf="@+id/tv_map_year"
+            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintStart_toStartOf="@+id/tv_map_year"
+            app:layout_constraintTop_toTopOf="@+id/tv_map_year"
+            app:layout_constraintVertical_bias="0.76"
+            app:srcCompat="@drawable/text_background" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_year"
-        app:layout_constraintEnd_toEndOf="@+id/tv_year"
-        app:layout_constraintHorizontal_bias="0.6"
-        app:layout_constraintStart_toStartOf="@+id/tv_year"
-        app:layout_constraintTop_toTopOf="@+id/tv_year"
-        app:layout_constraintVertical_bias="0.76"
-        app:srcCompat="@drawable/text_background" />
+        <TextView
+            android:id="@+id/tv_map_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="64dp"
+            android:paddingBottom="8dp"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_map_backgr"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_map_backgr"
+            app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/tv_year"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="64dp"
-        android:paddingBottom="8dp"
-        android:text="@{year + ` year`}"
-        android:textColor="@color/white"
-        android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_backgr"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iv_backgr"
-        app:layout_constraintVertical_bias="0.0" />
+        <!--android:text="@{year + ` year`}"-->
+        <Button
+            android:id="@+id/bt_map_ctxt"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="context"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_map_backgr"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_map_backgr"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/spinner_map_configuration_chooser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
             android:gravity="start"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_header"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_map_header"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_header" />
+            app:layout_constraintTop_toTopOf="@+id/iv_map_header" />
 
-        <Button
-            android:id="@+id/bt_ctxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="context"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_backgr"
+        <ImageView
+            android:id="@+id/iv_map_loading_backgound"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_backgr"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/loading_background"
+            tools:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_map_loading1"
+            android:layout_width="wrap_content"
+            android:layout_height="38sp"
+            android:layout_marginTop="16dp"
+            android:text="C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s"
+            android:textSize="34sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/seekbar_map_year"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_map_header"
+            app:layout_constraintVertical_bias="0.0"
+            tools:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_map_loading1_2"
+            android:layout_width="wrap_content"
+            android:layout_height="38sp"
+            android:layout_marginTop="16dp"
+            android:text="C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s"
+            android:textSize="34sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/seekbar_map_year"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_map_header"
+            app:layout_constraintVertical_bias="0.0"
+            tools:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_map_loading2"
+            android:layout_width="wrap_content"
+            android:layout_height="38sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s"
+            android:textSize="34sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/seekbar_map_year"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_map_header"
+            app:layout_constraintVertical_bias="1.0"
+            tools:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_map_loading2_2"
+            android:layout_width="wrap_content"
+            android:layout_height="38sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s C a t l a s"
+            android:textSize="34sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/seekbar_map_year"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_map_header"
+            app:layout_constraintVertical_bias="1.0"
+            tools:visibility="invisible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

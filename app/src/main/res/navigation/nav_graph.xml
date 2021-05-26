@@ -10,7 +10,8 @@
         android:label="MainFragment">
         <action
             android:id="@+id/action_mainFragment_to_extendedInfoFragment"
-            app:destination="@id/extendedInfoFragment">
+            app:destination="@id/extendedInfoFragment"
+            app:launchSingleTop="true">
             <argument
                 android:name="description"
                 android:defaultValue="@null" />
@@ -22,7 +23,7 @@
             <argument
                 android:name="config"
                 android:defaultValue="@null"
-                app:argType="com.kakadurf.catlas.domain.data.ConfigurationContext"
+                app:argType="com.kakadurf.catlas.domain.config.TimelineContext"
                 app:nullable="true" />
         </action>
     </fragment>
@@ -32,7 +33,11 @@
         android:label="MenuFragment">
         <action
             android:id="@+id/action_menuFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_menuFragment_to_configurationCreationFragment"
+            app:destination="@id/configurationCreationFragment" />
     </fragment>
     <fragment
         android:id="@+id/extendedInfoFragment"
@@ -42,4 +47,8 @@
         android:id="@+id/contextFragment"
         android:name="com.kakadurf.catlas.presentation.map.view.fragment.ContextFragment"
         android:label="ContextFragment" />
+    <fragment
+        android:id="@+id/configurationCreationFragment"
+        android:name="com.kakadurf.catlas.presentation.general.view.ConfigurationCreationFragment"
+        android:label="ConfigurationCreationFragment" />
 </navigation>

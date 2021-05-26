@@ -1,6 +1,5 @@
 package com.kakadurf.catlas.domain.wiki.parser
 
-import com.kakadurf.catlas.data.timeline.http.wiki.HistoricEvent
 import java.util.TreeMap
 
 class WikipediaParser(
@@ -9,6 +8,7 @@ class WikipediaParser(
     private val
     countryExtractor: CountryExtractor
 ) {
+    @Deprecated("not yet implemented")
     fun parseTable(rowWikiTable: String, requestedHeader: String = "countries") {
         val table = rowWikiTable.dropWhile { it != '{' }.split("|-")
         val headers = table[0].split("!!")
@@ -23,7 +23,6 @@ class WikipediaParser(
         for (i in 1..table.size) {
             table[i]
         }
-        TODO()
         /*    for (header in headers.split("!")){
                 if(header.equals(requestedHeader, ignoreCase = true)){
 

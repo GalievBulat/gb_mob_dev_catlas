@@ -6,11 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kakadurf.catlas.data.timeline.db.CachedEntity
 import com.kakadurf.catlas.data.timeline.db.DBCacheDao
-import com.kakadurf.catlas.data.timeline.http.wiki.HistoricEvent
+import com.kakadurf.catlas.data.timeline.db.DBConfigDao
 import com.kakadurf.catlas.data.timeline.http.wiki.WikiPageRepository
-import com.kakadurf.catlas.domain.data.Configuration
+import com.kakadurf.catlas.domain.config.Configuration
+import com.kakadurf.catlas.domain.wiki.parser.HistoricEvent
 import com.kakadurf.catlas.domain.wiki.parser.WikiTextCleanUp
 import com.kakadurf.catlas.domain.wiki.parser.WikipediaParser
 import com.kakadurf.catlas.presentation.map.service.ConfigurationParser
@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
+import java.net.SocketTimeoutException
 import java.util.TreeMap
 import javax.inject.Inject
 
@@ -40,28 +41,43 @@ class MapViewModel : ViewModel() {
     lateinit var localGeo: LocalGeo
 
     @Inject
-    lateinit var dao: DBCacheDao
+    lateinit var cacheDao: DBCacheDao
+
+    @Inject
+    lateinit var configDao: DBConfigDao
 
     private val mTimeLineMap: MutableLiveData<TreeMap<Int, HistoricEvent>> = MutableLiveData()
     private val mCurrentYear: MutableLiveData<Int> = MutableLiveData()
-    private val mMapConfigCompletion: MutableLiveData<Boolean> = MutableLiveData()
     private val mCurrentRegion: MutableLiveData<JSONObject> = MutableLiveData()
+    private val mCurrentLocalConfiguration: MutableLiveData<Configuration> = MutableLiveData()
+    private val mMapConfigurationCompletion: MutableLiveData<Boolean> = MutableLiveData()
+    private val mConfigurationNames: MutableLiveData<List<String>> = MutableLiveData()
 
-    private val mCurrentConfiguration: MutableLiveData<Configuration> = MutableLiveData()
-
-
-    val currentConfiguration: LiveData<Configuration> = mCurrentConfiguration
+    val currentLocalConfiguration: LiveData<Configuration> = mCurrentLocalConfiguration
+    val configurationNames: LiveData<List<String>> = mConfigurationNames
     val currentYear: LiveData<Int> = mCurrentYear
     val currentRegion: LiveData<JSONObject> = mCurrentRegion
     val timeLineMap: LiveData<TreeMap<Int, HistoricEvent>> = mTimeLineMap
-    // val mapConfigCompletion: LiveData<Boolean> = mMapConfigCompletion
+    val mapConfigurationCompletion: LiveData<Boolean> = mMapConfigurationCompletion
+
+    fun onMapConfigured() {
+        mMapConfigurationCompletion.value = true
+    }
+
+    fun onMapDestroyed() {
+        mMapConfigurationCompletion.value = false
+    }
 
     private suspend fun parseArticle(article: String) {
-        val rowText = wikiRepository.getAllWikiTextFromPage(article)
-        val text = wikiTextCleanUp.cleanupWikiText(rowText)
-        val timeLineMap = wikipediaParser.getTimelineMap(text)
-        mapInflater.fillContours(timeLineMap)
-        mTimeLineMap.postValue(timeLineMap)
+        try {
+            val rowText = wikiRepository.getAllWikiTextFromPage(article)
+            val text = wikiTextCleanUp.cleanupWikiText(rowText)
+            val timeLineMap = wikipediaParser.getTimelineMap(text)
+            mapInflater.fillContours(timeLineMap)
+            mTimeLineMap.postValue(timeLineMap)
+        } catch (e: SocketTimeoutException) {
+            Timber.e("timeout")
+        }
     }
 
     @MainThread
@@ -76,7 +92,7 @@ class MapViewModel : ViewModel() {
             mTimeLineMap.value?.run {
                 val region = get(year)?.region
                 region?.let {
-                    dao.pullFromDB(region, year)?.json?.let {
+                    cacheDao.pullFromDB(region, year)?.json?.let {
                         mCurrentRegion.postValue(JSONObject(String(it)))
                     }
                 }
@@ -84,30 +100,36 @@ class MapViewModel : ViewModel() {
         }
     }
 
-    fun getInfoByYear(year: Int): HistoricEvent? = mTimeLineMap.value?.get(year)
-
-    fun setConfiguration(context: Context, path: String = "epochs.json") {
+    fun getAllConfigNames() {
         viewModelScope.launch(Dispatchers.IO) {
-            val configuration = (ConfigurationParser(
-                context, "config_files/$path"
-            ).configuration)
-            mCurrentConfiguration.postValue(configuration)
-            parseArticle(configuration.article)
+            mConfigurationNames.postValue(
+                configDao.getAllConfigNames()
+            )
         }
     }
 
-    private suspend fun getLocalRegions() {
-        val timelineMap = localGeo.getAllLocalFeatures()
-        if (dao.getDbSize() == 0)
-            Timber.d("prepop map")
-        timelineMap.forEach {
-            dao.saveToDB(
-                CachedEntity(
-                    it.key,
-                    it.value.second.toString().toByteArray(),
-                    it.value.first
-                )
-            )
+    fun getInfoByYear(year: Int): HistoricEvent? = mTimeLineMap.value?.get(year)
+
+    fun setConfiguration(name: String = "Inventions TimeLine") {
+        viewModelScope.launch(Dispatchers.IO) {
+            val config = configDao.pullConfigFromDB(name)
+            val contexts = configDao.getAllContextByGroup(config.contextGroup)
+            config.contexts = contexts
+            mCurrentLocalConfiguration.postValue(config)
+            parseArticle(config.article)
+        }
+    }
+
+    @Deprecated("in case of not using db")
+    fun setLocalConfiguration(context: Context, path: String = "epochs.json") {
+        viewModelScope.launch(Dispatchers.IO) {
+            val configuration = (
+                    ConfigurationParser(
+                        context, "config_files/$path"
+                    ).localConfiguration
+                    )
+            mCurrentLocalConfiguration.postValue(configuration)
+            parseArticle(configuration.article)
         }
     }
 }
