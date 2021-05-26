@@ -1,13 +1,12 @@
 package com.kakadurf.catlas.presentation.map.view.fragment
 
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.kakadurf.catlas.R
-import kotlinx.android.synthetic.main.fr_description.tv_context_description
+import kotlinx.android.synthetic.main.fr_description.tv_description_text
 
 class ExtendedInfoFragment : Fragment() {
     override fun onCreateView(
@@ -21,7 +20,7 @@ class ExtendedInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tv_context_description.movementMethod = ScrollingMovementMethod()
-        tv_context_description.text = arguments?.getString("description")
+        //tv_description_text.movementMethod = ScrollingMovementMethod()
+        tv_description_text.text = arguments?.getString("description")
     }
 }

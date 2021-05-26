@@ -77,6 +77,7 @@ class MapViewModel : ViewModel() {
             mTimeLineMap.postValue(timeLineMap)
         } catch (e: SocketTimeoutException) {
             Timber.e("timeout")
+            parseArticle(article)
         }
     }
 

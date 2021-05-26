@@ -46,7 +46,7 @@ class MapFragment(
     lateinit var animationManaging: AnimationManaging
 
     @Inject
-    lateinit var spinnerOnSelectedListenerExtention: SpinnerOnSelectedListenerExtention
+    lateinit var spinnerOnSelectedListenerExtension: SpinnerOnSelectedListenerExtention
 
     private lateinit var mapService: MapMaintainingService
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -168,7 +168,7 @@ class MapFragment(
                         index = 0
                     spinner_map_configuration_chooser.setSelection(index)
                 }
-                spinnerOnSelectedListenerExtention.run {
+                spinnerOnSelectedListenerExtension.run {
                     spinner_map_configuration_chooser.setSelectListener { position ->
                         Timber.d(configs[position])
                         if (configs[position] != viewModel.currentLocalConfiguration.value?.name) {
