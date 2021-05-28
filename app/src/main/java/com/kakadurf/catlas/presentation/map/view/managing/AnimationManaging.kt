@@ -22,7 +22,7 @@ class AnimationManaging @Inject constructor() {
         textView4.visibility = View.VISIBLE
         background.visibility = View.VISIBLE
         animator1 = anim(textView1, textView2)
-        animator2 = anim(textView3, textView4)
+        animator2 = anim(textView3, textView4, reverse = true)
     }
 
     private lateinit var animator1: Animator
@@ -43,8 +43,9 @@ class AnimationManaging @Inject constructor() {
         background.visibility = View.GONE
     }
 
-    private fun anim(first: TextView, second: TextView): Animator {
-        val animator = ValueAnimator.ofFloat(0.0f, 1.0f)
+    private fun anim(first: TextView, second: TextView, reverse: Boolean = false): Animator {
+        val animator = if (reverse) ValueAnimator.ofFloat(1.0f, 0.0f) else
+            ValueAnimator.ofFloat(0.0f, 1.0f)
         animator.repeatCount = ValueAnimator.INFINITE
         animator.interpolator = LinearInterpolator()
         animator.duration = 9000L

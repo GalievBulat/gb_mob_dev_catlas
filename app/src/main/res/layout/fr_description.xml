@@ -53,21 +53,40 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_description_header"
         app:srcCompat="@drawable/header" />
 
-    <TextView
-        android:id="@+id/tv_description_text"
+    <ScrollView
+        android:id="@+id/scrollview_description"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbarStyle="insideInset"
-        android:scrollbarThumbVertical="@drawable/scroll"
-        android:scrollbars="vertical"
-        android:text="TextView"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:verticalScrollbarPosition="right"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_description_text_background"
-        app:layout_constraintEnd_toEndOf="@+id/iv_description_text_background"
-        app:layout_constraintStart_toStartOf="@+id/iv_description_text_background"
-        app:layout_constraintTop_toTopOf="@+id/iv_description_text_background" />
+        app:layout_constraintBottom_toBottomOf="@id/iv_description_text_background"
+        app:layout_constraintEnd_toEndOf="@id/iv_description_text_background"
+        app:layout_constraintStart_toStartOf="@id/iv_description_text_background"
+        app:layout_constraintTop_toTopOf="@id/iv_description_text_background">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_description_info"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/tv_description_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:scrollbarStyle="insideInset"
+                android:scrollbarThumbVertical="@drawable/scroll"
+                android:scrollbars="vertical"
+                android:text="TextView"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:verticalScrollbarPosition="right"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

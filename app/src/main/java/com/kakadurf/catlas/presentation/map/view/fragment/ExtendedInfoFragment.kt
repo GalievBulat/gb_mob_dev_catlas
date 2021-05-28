@@ -20,7 +20,7 @@ class ExtendedInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //tv_description_text.movementMethod = ScrollingMovementMethod()
-        tv_description_text.text = arguments?.getString("description")
+        tv_description_text.text =
+            arguments?.getString("description")
     }
 }

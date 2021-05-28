@@ -55,7 +55,12 @@ class WikipediaParser(
     private fun convertToText(
         wikiText: String,
         linkStart: String = "[[",
-        linkEnd: String = "]]"
+        linkEnd: String = "]]",
+        referenceRegex: String = "<?ref>.*?<?ref>"
     ) =
-        wikiText.replace(linkStart, "").replace(linkEnd, "")
+        wikiText.replace(linkStart, "")
+            .replace(linkEnd, "")
+            .replace("|", " ")
+            .replace("#", " ")
+            .replace(Regex(referenceRegex, RegexOption.DOT_MATCHES_ALL), "")
 }
