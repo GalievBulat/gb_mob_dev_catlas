@@ -38,6 +38,9 @@
         <action
             android:id="@+id/action_menuFragment_to_configurationCreationFragment"
             app:destination="@id/configurationCreationFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_helpFragment"
+            app:destination="@id/helpFragment" />
     </fragment>
     <fragment
         android:id="@+id/extendedInfoFragment"
@@ -51,4 +54,8 @@
         android:id="@+id/configurationCreationFragment"
         android:name="com.kakadurf.catlas.presentation.general.view.ConfigurationCreationFragment"
         android:label="ConfigurationCreationFragment" />
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="com.kakadurf.catlas.presentation.general.view.HelpFragment"
+        android:label="HelpFragment" />
 </navigation>

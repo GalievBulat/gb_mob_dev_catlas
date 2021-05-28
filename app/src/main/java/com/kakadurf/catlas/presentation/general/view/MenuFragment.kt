@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.kakadurf.catlas.R
 import kotlinx.android.synthetic.main.fr_menu.bt_menu_create_config
+import kotlinx.android.synthetic.main.fr_menu.bt_menu_info
 import kotlinx.android.synthetic.main.fr_menu.bt_menu_map
 
 class MenuFragment : Fragment() {
@@ -22,15 +23,16 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bt_menu_map.setOnClickListener {
-            findNavController().navigate(R.id.action_menuFragment_to_mainFragment)
+        with(findNavController()) {
+            bt_menu_map.setOnClickListener {
+                navigate(R.id.action_menuFragment_to_mainFragment)
+            }
+            bt_menu_create_config.setOnClickListener {
+                navigate(R.id.action_menuFragment_to_configurationCreationFragment)
+            }
+            bt_menu_info.setOnClickListener {
+                navigate(R.id.action_menuFragment_to_helpFragment)
+            }
         }
-        bt_menu_create_config.setOnClickListener {
-            findNavController().navigate(R.id.action_menuFragment_to_configurationCreationFragment)
-        }
-        /*
-            button3.setOnClickListener{
-                findNavController().navigate(R.id.action_menuFragment_to_contextFragment)
-            }*/
     }
 }

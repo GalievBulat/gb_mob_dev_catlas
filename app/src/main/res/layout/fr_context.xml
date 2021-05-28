@@ -78,7 +78,7 @@
                 android:scrollbarAlwaysDrawVerticalTrack="false"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical"
-                android:text="TextView"
+                android:text="context not found"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:verticalScrollbarPosition="defaultPosition"
